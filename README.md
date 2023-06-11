@@ -36,16 +36,32 @@ CLI will run the requests specified in the .http and generate a junit-xml as out
 
 ### C# Example Usage
 
-```csharp
+#### Running all requests in a .http file and getting the result
 
+```csharp
 using DotHttpTest;
 
 var runner = new TestPlanRunnerOptionsBuilder()
 		.LoadHttpFile(pathToHttpFile)
-                .Build();
+        .Build();
 
 var testStatus = await runner.RunAsync();
 Console.WriteLine($"Requests failed: {testStatus.HttpRequestFails.Value} / {testStatus.HttpRequests.Value}");
+```
+
+#### Running a single request
+
+```csharp
+using DotHttpTest;
+using var client = new DotHttpClient();
+var requests = client.LoadFile("testfile.http");
+var request = requests.First();
+
+var response = await client.SendAsync(request);
+
+System.Net.Http.HttpResponseMessage httpResponse = respose.AsHttpResponseMessage();
+Console.WriteLine($"{httpResponse.IsSuccessStatusCode}");
+
 ```
 
 ## Running stress, soak and iterative tests

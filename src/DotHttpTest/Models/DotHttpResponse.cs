@@ -27,5 +27,10 @@ namespace DotHttpTest.Models
             Results = new();
         }
 
+        public HttpResponseMessage AsHttpResponseMessage()
+        {
+            return HttpResponse;
+        }
+
     }
 }
