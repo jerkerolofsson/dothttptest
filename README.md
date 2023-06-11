@@ -59,7 +59,7 @@ var request = requests.First();
 
 var response = await client.SendAsync(request);
 
-System.Net.Http.HttpResponseMessage httpResponse = respose.AsHttpResponseMessage();
+System.Net.Http.HttpResponseMessage httpResponse = response.AsHttpResponseMessage();
 Console.WriteLine($"{httpResponse.IsSuccessStatusCode}");
 
 ```
