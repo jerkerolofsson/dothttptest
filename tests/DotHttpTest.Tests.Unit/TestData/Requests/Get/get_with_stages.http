@@ -1,0 +1,4 @@
+# @stage ramp-up 	duration:30s target:100
+# @stage soak 		duration:2h  target:100
+# @stage ramp-down 	duration:5m  target:0
+GET http://localhost/index.html HTTP/1.1

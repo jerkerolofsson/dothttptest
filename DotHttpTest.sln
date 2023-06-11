@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotHttpTest", "src\DotHttpTest\DotHttpTest.csproj", "{AFB25ED2-3C61-47C1-86D3-6E6406B1173B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotHttpTest.Tests.Unit", "tests\DotHttpTest.Tests.Unit\DotHttpTest.Tests.Unit.csproj", "{76AE03A4-043F-4729-907F-2DF47A1F61DB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotHttpTest.Tests.Integration", "tests\DotHttpTest.Tests.Integration\DotHttpTest.Tests.Integration.csproj", "{1AC82EE0-EBFF-49B6-90C1-087566C14558}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3708CB86-268D-46E9-9728-032061528EBF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{06DD0E93-11E1-4C62-A3A5-1081E636CE32}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dothttp", "src\dothttp\dothttp.csproj", "{765C366C-9568-480A-9E17-FAA3143EF511}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AFB25ED2-3C61-47C1-86D3-6E6406B1173B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFB25ED2-3C61-47C1-86D3-6E6406B1173B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFB25ED2-3C61-47C1-86D3-6E6406B1173B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFB25ED2-3C61-47C1-86D3-6E6406B1173B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76AE03A4-043F-4729-907F-2DF47A1F61DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76AE03A4-043F-4729-907F-2DF47A1F61DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76AE03A4-043F-4729-907F-2DF47A1F61DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76AE03A4-043F-4729-907F-2DF47A1F61DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AC82EE0-EBFF-49B6-90C1-087566C14558}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AC82EE0-EBFF-49B6-90C1-087566C14558}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AC82EE0-EBFF-49B6-90C1-087566C14558}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AC82EE0-EBFF-49B6-90C1-087566C14558}.Release|Any CPU.Build.0 = Release|Any CPU
+		{765C366C-9568-480A-9E17-FAA3143EF511}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{765C366C-9568-480A-9E17-FAA3143EF511}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{765C366C-9568-480A-9E17-FAA3143EF511}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{765C366C-9568-480A-9E17-FAA3143EF511}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AFB25ED2-3C61-47C1-86D3-6E6406B1173B} = {3708CB86-268D-46E9-9728-032061528EBF}
+		{76AE03A4-043F-4729-907F-2DF47A1F61DB} = {06DD0E93-11E1-4C62-A3A5-1081E636CE32}
+		{1AC82EE0-EBFF-49B6-90C1-087566C14558} = {06DD0E93-11E1-4C62-A3A5-1081E636CE32}
+		{765C366C-9568-480A-9E17-FAA3143EF511} = {3708CB86-268D-46E9-9728-032061528EBF}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {09E611BE-8CE6-4A3B-BA74-BF456E596B46}
+	EndGlobalSection
+EndGlobal

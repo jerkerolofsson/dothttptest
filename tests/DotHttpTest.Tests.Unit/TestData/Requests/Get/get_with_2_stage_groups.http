@@ -1,0 +1,9 @@
+# @stage A 	duration:30s target:100
+# @name request1
+GET http://localhost/index.html HTTP/1.1
+
+###
+
+# @stage B  duration:30s target:100
+# @name request2
+GET http://localhost/index2.html HTTP/1.1

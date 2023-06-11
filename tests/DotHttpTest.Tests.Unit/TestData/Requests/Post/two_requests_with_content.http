@@ -1,0 +1,14 @@
+POST http://localhost/index.html HTTP/1.1
+Content-Type: text/plain
+
+hello
+
+###
+
+POST http://localhost/index2.html HTTP/1.1
+Content-Type: text/plain
+
+world
+
+###
+

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "dothttp": {
+      "commandName": "Project",
+      "commandLineArgs": "run \"d:\\local\\code\\Brightest\\tests\\api\\broker\\user\\stress\\stress_myself.http\""
+    }
+  }
+}

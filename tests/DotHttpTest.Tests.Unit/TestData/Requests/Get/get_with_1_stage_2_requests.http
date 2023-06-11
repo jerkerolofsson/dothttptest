@@ -1,0 +1,6 @@
+# @stage test 	duration:30s target:100
+GET http://localhost/index.html HTTP/1.1
+
+###
+
+GET http://localhost/index2.html HTTP/1.1

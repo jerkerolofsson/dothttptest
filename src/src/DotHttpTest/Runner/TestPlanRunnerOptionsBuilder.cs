@@ -1,0 +1,50 @@
+﻿using DotHttpTest.Builders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DotHttpTest.Runner
+{
+    public class TestPlanRunnerOptionsBuilder
+    {
+        private TestPlanRunnerOptions mRunnerOptions = new TestPlanRunnerOptions();
+        private TestPlanBuilder mTestPlanBuilder = new TestPlanBuilder();
+        private ClientOptions mClientOptions = ClientOptions.DefaultOptions();
+
+        public TestPlanRunnerOptionsBuilder ConfigureClientOptions(Action<ClientOptionsBuilder> builder)
+        {
+            var clientOptionsBuilder = new ClientOptionsBuilder();
+            builder(clientOptionsBuilder);
+            mClientOptions = clientOptionsBuilder.Build();
+            return this;
+        }
+
+        public TestPlanRunnerOptionsBuilder AddCallback(ITestPlanRunnerProgressHandler callback)
+        {
+            mRunnerOptions.AddCallback(callback);
+            return this;
+        }
+
+        public TestPlanRunnerOptionsBuilder LoadHttpFile(string httpFilePath)
+        {
+            return ConfigureTestPlan((builder, options) => {
+                builder.LoadHttpFile(httpFilePath, options);
+            });
+        }
+        public TestPlanRunnerOptionsBuilder ConfigureTestPlan(Action<TestPlanBuilder, ClientOptions> testPlanConfigurator)
+        {
+            testPlanConfigurator(mTestPlanBuilder, mClientOptions);
+            return this;
+        }
+
+        public TestPlanRunner Build()
+        {
+            mRunnerOptions.ClientOptions = mClientOptions;
+            var runner = new TestPlanRunner(mTestPlanBuilder.Build(), mRunnerOptions);
+            return runner;
+        }
+
+    }
+}

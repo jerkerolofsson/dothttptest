@@ -1,0 +1,2 @@
+@host=httpbin.org
+GET https://{{host}}/get HTTP/1.1

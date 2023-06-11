@@ -1,0 +1,5 @@
+GET http://localhost/index.html HTTP/1.1
+
+###
+
+GET http://localhost/other.html HTTP/1.1
