@@ -1,15 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackAsTool>True</PackAsTool>
+		<AssemblyVersion>1.0.0</AssemblyVersion>
+		<PackageIcon>icon.png</PackageIcon>
+		<Description>DotNetTest CLI application</Description>
+		<Title>DotNetTest CLI</Title>
+		<Authors>Jerker Olofsson</Authors>
+		<Company>Jerker Olofsson</Company>
+		<PackageId>DotNetTestCLI</PackageId>
+		<Version>1.0.4</Version>
+	</PropertyGroup>
 
-
-
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\data\icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Spectre.Console" Version="0.47.1-preview.0.6" />
@@ -18,9 +31,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DotHttpTest\DotHttpTest.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
   </ItemGroup>
 
 </Project>

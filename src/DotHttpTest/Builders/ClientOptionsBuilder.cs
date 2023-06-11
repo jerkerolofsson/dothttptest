@@ -9,25 +9,17 @@ namespace DotHttpTest.Builders
 {
     public class ClientOptionsBuilder
     {
-        private List<IVariableProvider> mVariableProviders = new List<IVariableProvider>();
+        private readonly List<IVariableProvider> mVariableProviders = new List<IVariableProvider>();
         private VariableCollection? mVariableCollection = null;
         internal ClientOptions mOptions = new ClientOptions();
 
         public ClientOptionsBuilder()
         {
-            UseDefaultVariableProviders();
         }
 
         public ClientOptions Build()
         {
-            mOptions.Variables = new();
-            foreach (var variableProvider in mVariableProviders)
-            {
-                foreach(var pair in variableProvider.ToDictionary())
-                {
-                    mOptions.Variables[pair.Key] = pair.Value;
-                }
-            }
+            mOptions.VariableProviders = mVariableProviders.ToList();
             return mOptions;
         }
 
@@ -36,9 +28,14 @@ namespace DotHttpTest.Builders
             mVariableProviders.Clear();
             return this;
         }
-        public ClientOptionsBuilder UseDefaultVariableProviders()
+        public ClientOptionsBuilder UseDefaultVariableProvider()
         {
             mVariableProviders.Insert(0, new DefaultVariableProvider());
+            return this;
+        }
+        public ClientOptionsBuilder UseDynamicVariableProvider()
+        {
+            mVariableProviders.Insert(0, new DynamicVariableProvider());
             return this;
         }
         public ClientOptionsBuilder UseEnvironmentVariablesProviders(EnvironmentVariableTarget target = EnvironmentVariableTarget.Process)

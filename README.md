@@ -8,7 +8,7 @@ With integration in VS Code, Visual Studio and Rider I like that I don't have to
 
 They are simple and efficient. Can be shared within the development team. They can be shared with a QA team.
 
-As a developer, I also don't like duplicating work. I was searching for a test framework where I can re-use my .http files for API testing, but I didn't find anything.
+As a developer, I also don't like duplicating work. I was searching for a test framework where I can re-use my .http files for API testing, but I didn't find anything that allowed me to do it using C#.
 
 ## Extensions in .http file
 

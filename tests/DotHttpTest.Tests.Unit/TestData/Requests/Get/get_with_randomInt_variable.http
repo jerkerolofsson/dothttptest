@@ -1,0 +1,1 @@
+GET https://localhost:{{$randomInt}}/{{$uuid}} HTTP/1.1

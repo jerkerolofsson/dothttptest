@@ -37,6 +37,12 @@
     <None Update="TestData\Requests\Get\get_with_stages.http">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\Requests\Get\get_with_randomInt_variable.http">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Requests\Get\get_with_uuid_variable.http">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\Requests\Post\two_requests_with_content.http">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -84,11 +84,22 @@ namespace DotHttpTest.Parser
                 return val;
             }
 
-            if (mOptions.Variables.TryGetValue(name, out val))
+            if (mOptions.VariableProviders != null)
             {
-                return val;
+                foreach (var variableProvider in mOptions.VariableProviders)
+                {
+                    val = variableProvider.GetVariableValue(name);
+                    if (val != null)
+                    {
+                        break;
+                    }
+                }
             }
-            return name;
+            if(val == null)
+            {
+                throw new ArgumentException($"There is no variable named '{name}' found");
+            }
+            return val;
         }
         public void SetLocalVariable(string name, string val)
         {

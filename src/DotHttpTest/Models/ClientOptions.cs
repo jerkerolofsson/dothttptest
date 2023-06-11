@@ -10,7 +10,7 @@ namespace DotHttpTest.Models
 {
     public class ClientOptions
     {
-        public Dictionary<string, string> Variables { get; set; } = new();
+        public IReadOnlyList<IVariableProvider>? VariableProviders { get; internal set; }
 
         public RequestOptions Request { get; set; } = new();
 
@@ -22,7 +22,8 @@ namespace DotHttpTest.Models
         {
             return new ClientOptionsBuilder()
                 .ClearVariableProviders()
-                .UseDefaultVariableProviders()
+                .UseDefaultVariableProvider()
+                .UseDynamicVariableProvider()
                 .UseEnvironmentVariablesProviders()
                 .WithRequestTimeout(TimeSpan.FromSeconds(30))
                 .Build();
