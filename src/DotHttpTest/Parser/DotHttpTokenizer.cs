@@ -99,7 +99,7 @@ namespace DotHttpTest.Parser
             {
                 throw new HttpParsingException(currentLine, $"Malformed HTTP request: '{line}'");
             }
-            var left = line.Substring(0, p1).Trim(); ;
+            var left = line.Substring(0, p1).Trim(); 
 
             if (p1 == p2)
             {
@@ -112,8 +112,8 @@ namespace DotHttpTest.Parser
             else
             {
                 var middleLength = p2 - p1 - 1;
-                var middle = line.Substring(p1 + 1, middleLength).Trim(); ;
-                var right = line.Substring(p2 + 1).Trim(); ;
+                var middle = line.Substring(p1 + 1, middleLength).Trim();
+                var right = line.Substring(p2 + 1).Trim();
 
                 yield return new HttpToken(HttpTokenType.Method, left);
                 yield return new HttpToken(HttpTokenType.Url, middle);
@@ -124,8 +124,7 @@ namespace DotHttpTest.Parser
 
         internal static IEnumerable<HttpToken> ParseHeader(int currentLine, string line)
         {
-            var p1 = line.IndexOf(':');
-            if (p1 == -1)
+            if (!line.Contains(':'))
             {
                 throw new HttpParsingException(currentLine, $"Malformed HTTP header: '{line}'");
             }

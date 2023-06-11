@@ -10,7 +10,7 @@ They are simple and efficient. Can be shared within the development team. They c
 
 As a developer, I also don't like duplicating work. I was searching for a test framework where I can re-use my .http files for API testing, but I didn't find anything.
 
-## Verification extensions in .http file
+## Extensions in .http file
 
 dothttptest supports extensions in the form of .http file comments, allowing the same file to be used within existing tools without breaking compliance, while also allowing automating tests with the same file.
 All extensions including those that add verification checks are added as instructions within a comment similarily to how some .http formats allow setting a name for a request:
@@ -19,9 +19,38 @@ All extensions including those that add verification checks are added as instruc
 GET http://localhost/get HTTP/1.1
 ```
 
-A verification check can be added in a similar way:
+### Verification checks within .http files
+
+A verification check can be added in a similar way to @name by using the @verify command:
 ```http
 # @verify http status-code 200
+GET http://localhost/get HTTP/1.1
+```
+
+The @verify command is followed by the module performing the verification. Additional modules can be added to support additional checks.
+
+Verifiers can be created in code:
+```csharp
+[ResponseVerifier("myVerifier")]
+public class MyVerifier : IVerifier
+{
+	public void Verify(DotHttpResponse response, VerificationCheckResult result)
+	{
+		// ...
+	}
+}
+```
+.. and used within the .http file by speciying the same name as was specified in code on the ResponseVerifier attribute on the class.
+
+#### Verify that an HTTP header exists in the response
+```http
+# @verify header content-type exists
+GET http://localhost/get HTTP/1.1
+```
+
+#### Verify that an HTTP header value exists in a response
+```http
+# @verify header accept-ranges == bytes
 GET http://localhost/get HTTP/1.1
 ```
 
@@ -33,6 +62,13 @@ GET http://localhost/get HTTP/1.1
 $ dothttp run <httpfile>
 ```
 CLI will run the requests specified in the .http and generate a junit-xml as output.
+
+### Adding .NET package
+
+#### Add package using .NET CLI
+```
+dotnet add package DotHttpTest
+```
 
 ### C# Example Usage
 
