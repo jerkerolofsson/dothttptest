@@ -36,6 +36,8 @@ namespace dothttp.Commands
             var testStatus = await runner.RunAsync();
             ui.Stop();
 
+            Console.WriteLine($"Requests failed: {testStatus.HttpRequestFails.Value} / {testStatus.HttpRequests.Value}");
+
             AnsiConsole.Clear();
             AnsiConsole.Write(ui.CreateMetricTable(testStatus));
             AnsiConsole.Write(ui.CreateResponseCodePanel(testStatus));

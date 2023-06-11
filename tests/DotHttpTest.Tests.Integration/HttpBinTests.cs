@@ -28,6 +28,7 @@ namespace DotHttpTest.Tests.Integration
             }
         }
 
+        [TestMethod]
         public async Task SendAsync_WithHttpBinGetUrl_Returns200()
         {
             using var client = new DotHttpClient();

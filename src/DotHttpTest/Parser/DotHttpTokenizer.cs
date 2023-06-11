@@ -3,6 +3,7 @@ using DotHttpTest.Parser.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -98,16 +99,26 @@ namespace DotHttpTest.Parser
             {
                 throw new HttpParsingException(currentLine, $"Malformed HTTP request: '{line}'");
             }
+            var left = line.Substring(0, p1).Trim(); ;
 
-            var left = line.Substring(0, p1);
+            if (p1 == p2)
+            {
+                // No HTTP version
+                var requestUrl = line.Substring(p1 + 1).Trim();
+                yield return new HttpToken(HttpTokenType.Method, left);
+                yield return new HttpToken(HttpTokenType.Url, requestUrl);
+                yield return new HttpToken(HttpTokenType.HttpVersion, "HTTP/1.1");
+            }
+            else
+            {
+                var middleLength = p2 - p1 - 1;
+                var middle = line.Substring(p1 + 1, middleLength).Trim(); ;
+                var right = line.Substring(p2 + 1).Trim(); ;
 
-            var middleLength = p2 - p1 - 1;
-            var middle = line.Substring(p1+1, middleLength);
-            var right = line.Substring(p2+1);
-
-            yield return new HttpToken(HttpTokenType.Method, left);
-            yield return new HttpToken(HttpTokenType.Url, middle);
-            yield return new HttpToken(HttpTokenType.HttpVersion, right);
+                yield return new HttpToken(HttpTokenType.Method, left);
+                yield return new HttpToken(HttpTokenType.Url, middle);
+                yield return new HttpToken(HttpTokenType.HttpVersion, right);
+            }
         }
 
 

@@ -12,6 +12,17 @@ namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
     public class RequestMethodTests
     {
         [TestMethod]
+        public void DotHttpRequestLoader_WithGetRequestWithoutVersion_RequestMethodIsGet()
+        {
+            // Arrange
+            // Act
+            var request = DotHttpRequestLoader.ParseRequest(File.ReadAllLines("TestData/Requests/Get/get_no_http_version.http"));
+
+            // Assert
+            request.Should().NotBeNull().And.HaveMethod(HttpMethod.Get);
+        }
+
+        [TestMethod]
         public void DotHttpRequestLoader_WithGetRequest_RequestMethodIsGet()
         {
             // Arrange

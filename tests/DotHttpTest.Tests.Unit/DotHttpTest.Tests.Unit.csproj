@@ -22,6 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="TestData\Requests\Get\get_no_http_version.http">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\Requests\Get\get_with_2_stage_groups.http">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
