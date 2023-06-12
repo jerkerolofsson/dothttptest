@@ -17,14 +17,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="TestData\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\src\DotHttpTest\DotHttpTest.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="TestData\post_http_bin_with_json_not_eq.http">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\post_http_bin_with_json_check.http">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\post_http_bin_with_late_bound_json_variable.http">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\post_http_bin.http">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\get_http_bin.http">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

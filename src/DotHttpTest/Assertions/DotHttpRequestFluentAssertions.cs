@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using DotHttpTest.Converters;
+using System.Net.Http.Headers;
 
 namespace DotHttpTest.Assertions
 {
@@ -26,7 +28,7 @@ namespace DotHttpTest.Assertions
                 .ForCondition(!string.IsNullOrEmpty(name))
                 .FailWith("You can't assert that a header exists with a null value")
                 .Then
-                .Given(() => Subject.Request.Headers)
+                .Given(() => Subject.ToHttpRequestMessage(null).Headers)
                 .ForCondition(headers => headers.Any(header => header.Key.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
                 .FailWith($"Did not find the header {name}");
 
@@ -36,22 +38,32 @@ namespace DotHttpTest.Assertions
         public AndConstraint<DotHttpRequestFluentAssertions> HaveContentMediaType(
             string mediaType, string because = "", params object[] becauseArgs)
         {
+
+            var requestMessage = Subject.ToHttpRequestMessage(null);
+
+            var content = requestMessage.Content;
+            MediaTypeHeaderValue? contentType = null;
+            string? actualMediaType = null;
+
+            if(content?.Headers.ContentType != null)
+            {
+                contentType = content.Headers.ContentType;
+                actualMediaType = contentType.MediaType;
+            }
+
             Execute.Assertion
                 .BecauseOf(because, becauseArgs)
-                .ForCondition(Subject.Request.Content == null)
-                .FailWith("Request Content is not set")
+                .ForCondition(content != null)
+                .FailWith("HttpRequestMessage.Content is null")
                 .Then
-                .ForCondition(Subject.Request.Content?.Headers == null)
-                .FailWith("Content Headers is not set")
+                .ForCondition(contentType != null)
+                .FailWith("HttpRequestMessage.Content.ContentType is null")
                 .Then
-                .ForCondition(Subject.Request.Content?.Headers?.ContentType == null)
-                .FailWith("Content Type is not set")
+                .ForCondition(actualMediaType != null)
+                .FailWith("HttpRequestMessage.Content.MediaType is null")
                 .Then
-                .ForCondition(Subject.Request.Content?.Headers?.ContentType?.MediaType == null)
-                .FailWith("Content MediaType is not set")
-                .Then
-                .ForCondition(Subject.Request.Content?.Headers?.ContentType?.MediaType != mediaType)
-                .FailWith("Content MediaType is not set");
+                .ForCondition(mediaType.Equals(actualMediaType))
+                .FailWith($"Expected '{mediaType}' but got '{actualMediaType}'");
 
             return new AndConstraint<DotHttpRequestFluentAssertions>(this);
         }
@@ -65,13 +77,14 @@ namespace DotHttpTest.Assertions
         public AndConstraint<DotHttpRequestFluentAssertions> HaveMethod(
             HttpMethod method, string because = "", params object[] becauseArgs)
         {
+            var request = Subject.ToHttpRequestMessage(null);
             Execute.Assertion
                 .BecauseOf(because, becauseArgs)
-                .ForCondition(Subject.Request.Method is not null)
+                .ForCondition(Subject.Method is not null)
                 .FailWith("Request Method is null")
                 .Then
-                .ForCondition(Subject.Request.Method!.Equals(method))
-                .FailWith($"Request Method was {Subject.Request.Method} but expected {method}");
+                .ForCondition(request.Method!.Equals(method))
+                .FailWith($"Request Method was {request.Method} but expected {method}");
 
             return new AndConstraint<DotHttpRequestFluentAssertions>(this);
         }
@@ -86,11 +99,11 @@ namespace DotHttpTest.Assertions
         {
             Execute.Assertion
                 .BecauseOf(because, becauseArgs)
-                .ForCondition(Subject.Request.RequestUri is not null)
+                .ForCondition(Subject.Url is not null)
                 .FailWith("Request URI is null")
                 .Then
-                .ForCondition(Subject.Request.RequestUri!.Equals(url))
-                .FailWith($"Request URI was {Subject.Request.RequestUri} but expected {url}");
+                .ForCondition(Subject.Url!.ToString().Equals(url.ToString()))
+                .FailWith($"Request URI was {Subject.Url.ToString()} but expected {url}");
 
             return new AndConstraint<DotHttpRequestFluentAssertions>(this);
         }
@@ -104,7 +117,7 @@ namespace DotHttpTest.Assertions
                 .ForCondition(!string.IsNullOrEmpty(name))
                 .FailWith("You can't assert that a header exists with a null value")
                 .Then
-                .Given(() => Subject.Request.Headers)
+                .Given(() => Subject.ToHttpRequestMessage(null).Headers)
                 .ForCondition(headers => 
                         headers.Any(
                             header => 

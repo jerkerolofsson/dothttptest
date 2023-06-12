@@ -14,6 +14,18 @@ namespace DotHttpTest.Models
 
         public RequestOptions Request { get; set; } = new();
 
+        public Func<HttpClient>? HttpClientFactory { get; set; } = null;
+
+        public HttpClient CreateHttpClient()
+        {
+            if(HttpClientFactory != null)
+            {
+                return HttpClientFactory();
+            }
+
+            return new HttpClient();
+        }
+
         /// <summary>
         /// Creates default client options
         /// </summary>
@@ -24,6 +36,7 @@ namespace DotHttpTest.Models
                 .ClearVariableProviders()
                 .UseDefaultVariableProvider()
                 .UseDynamicVariableProvider()
+                .UseJsonVariableProvider()
                 .UseEnvironmentVariablesProviders()
                 .WithRequestTimeout(TimeSpan.FromSeconds(30))
                 .Build();

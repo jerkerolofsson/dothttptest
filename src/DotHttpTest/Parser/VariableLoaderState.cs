@@ -17,6 +17,10 @@ namespace DotHttpTest.Parser
             mOptions = options;
         }
 
+        /// <summary>
+        /// Manual variable assignment from a line
+        /// </summary>
+        /// <param name="line"></param>
         public void ParseVariableAssignmentLine(string line)
         {
             var p = line.IndexOf('=');
@@ -27,9 +31,9 @@ namespace DotHttpTest.Parser
             SetLocalVariable(name, val);
         }
 
-        public string ReplaceDataVariables(string data)
+        public ExpressionList ReplaceDataVariables(string data)
         {
-            var sb = new StringBuilder();
+            var expressions = new ExpressionList();
             string startPattern = "{{";
             string endPattern = "}}";
 
@@ -39,7 +43,7 @@ namespace DotHttpTest.Parser
                 var startPos = data.IndexOf(startPattern, prevPos);
                 if(startPos == -1)
                 {
-                    sb.Append(data.Substring(prevPos));
+                    expressions.Add(new Text(data.Substring(prevPos)));
                     break;
                 } 
                 else
@@ -48,7 +52,7 @@ namespace DotHttpTest.Parser
                     if(endPos == -1)
                     {
                         // There is no end
-                        sb.Append(data.Substring(prevPos));
+                        expressions.Add(new Text(data.Substring(prevPos)));
                         break;
                     }
 
@@ -56,12 +60,12 @@ namespace DotHttpTest.Parser
                     var variableEndPos = endPos + endPattern.Length;
 
                     var beforeVariable = data.Substring(prevPos, startPos - prevPos);
-                    sb.Append(beforeVariable);
+                    expressions.Add(new Text(beforeVariable));
 
                     // Extract the variable
                     var variable = data.Substring(startPos, variableEndPos - startPos);
                     var variableName = variable.TrimStart('{').TrimEnd('}');
-                    sb.Append(GetVariable(variableName));    
+                    expressions.Add(GetVariable(variableName));    
 
                     // Continue after the variable
                     prevPos = variableEndPos;
@@ -69,7 +73,7 @@ namespace DotHttpTest.Parser
             }
 
 
-            return sb.ToString();
+            return expressions;
         }
 
         /// <summary>
@@ -77,29 +81,28 @@ namespace DotHttpTest.Parser
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public string GetVariable(string name)
+        public Variable GetVariable(string name)
         {
             if (mLocalVariables.TryGetValue(name, out string? val))
             {
-                return val;
+                return new Variable()
+                {
+                    Value = val
+                };
             }
 
             if (mOptions.VariableProviders != null)
             {
                 foreach (var variableProvider in mOptions.VariableProviders)
                 {
-                    val = variableProvider.GetVariableValue(name);
-                    if (val != null)
+                    Variable? variable = variableProvider.GetVariableValue(name);
+                    if (variable != null)
                     {
-                        break;
+                        return variable;
                     }
                 }
             }
-            if(val == null)
-            {
-                throw new ArgumentException($"There is no variable named '{name}' found");
-            }
-            return val;
+            throw new ArgumentException($"There is no variable named '{name}' found");
         }
         public void SetLocalVariable(string name, string val)
         {

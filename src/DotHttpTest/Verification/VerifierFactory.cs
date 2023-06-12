@@ -14,6 +14,7 @@ namespace DotHttpTest.Verification
 
         public VerifierFactory(ClientOptions options)
         {
+            mVerifiers.Add(new Json.JsonVerifier());
             mVerifiers.Add(new Http.HttpVerifier());
             mVerifiers.Add(new Http.HttpHeaderVerifier());
             BuildLookupTable();

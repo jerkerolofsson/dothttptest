@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Text = Spectre.Console.Text;
 
 namespace dothttp.Handlers
 {

@@ -11,6 +11,6 @@ namespace DotHttpTest.Providers
     /// </summary>
     public interface IVariableProvider
     {
-        string? GetVariableValue(string variableName);
+        Variable? GetVariableValue(string variableName);
     }
 }

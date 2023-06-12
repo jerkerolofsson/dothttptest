@@ -12,7 +12,7 @@ namespace DotHttpTest.Parser
     {
         private readonly ClientOptions mOptions;
         private readonly VariableLoaderState mVariableLoaderState;
-        private StringBuilder mContent = new StringBuilder();
+        private ExpressionList mContent = new ExpressionList();
 
         public DotHttpRequestLoader()
         {
@@ -98,8 +98,8 @@ namespace DotHttpTest.Parser
 
         private DotHttpRequest AssignRequestBody(DotHttpRequest currentMessage)
         {
-            currentMessage.Body = Encoding.UTF8.GetBytes(mContent.ToString());
-            mContent.Clear();
+            currentMessage.Body = mContent;
+            mContent = new();
 
             return currentMessage;
         }
@@ -111,51 +111,37 @@ namespace DotHttpTest.Parser
             switch(token.Type)
             {
                 case HttpTokenType.Comment:
-                    CommentDataParser.ParseCommentMetadata(request, tokenData);
+                    CommentDataParser.ParseCommentMetadata(request, tokenData.ToString());
                     break;
                 case HttpTokenType.VariableAssignmentLine:
-                    mVariableLoaderState.ParseVariableAssignmentLine(tokenData);
+                    mVariableLoaderState.ParseVariableAssignmentLine(tokenData.ToString());
                     break;
                 case HttpTokenType.Method:
-                    request.Request.Method = new HttpMethod(tokenData);
+                    request.Method = tokenData;
                     break;
                 case HttpTokenType.HttpVersion:
-                    request.Request.Version = ParseHttpVersion(tokenData);
+                    request.Version = tokenData;
                     break;
                 case HttpTokenType.HeaderLine:
                     HttpHeaderParser.ParseHeader(request, tokenData);
                     break;
                 case HttpTokenType.BodyLine:
-                    mContent.Append(tokenData);
-                    mContent.Append('\n');
+                    if (tokenData != null)
+                    {
+                        mContent.Add(tokenData);
+                        mContent.Add("\n");
+                    }
                     break;
                 case HttpTokenType.Url:
                     request.HasUrl = true;
-                    ParseRequestUrl(request, tokenData);
+                    request.Url = tokenData;
                     break;
             }
         }
 
-        private Version ParseHttpVersion(string tokenData)
-        {
-            if(tokenData.StartsWith("HTTP/"))
-            {
-                return Version.Parse(tokenData.Substring(5));
-            }
-            return Version.Parse("1.1");
-        }
-
-        private string ProcessTokenData(string data)
+        private ExpressionList ProcessTokenData(string data)
         {
             return mVariableLoaderState.ReplaceDataVariables(data);
-        }
-
-        private void ParseRequestUrl(DotHttpRequest request, string data)
-        {
-            if (Uri.TryCreate(data, UriKind.Absolute, out Uri? uri))
-            {
-                request.Request.RequestUri = uri;
-            }
         }
     }
 }

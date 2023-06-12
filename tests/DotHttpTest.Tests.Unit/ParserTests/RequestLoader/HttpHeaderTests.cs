@@ -24,6 +24,19 @@ namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
         }
 
         [TestMethod]
+        public void HaveContentMediaType_ThrowsExceptionWhenWrongMediaType()
+        {
+            // Arrange
+            // Act
+            var dotRequest = DotHttpRequestLoader.ParseRequest(File.ReadAllLines("TestData/Requests/Post/post_with_content_type_header.http"));
+
+            // Assert
+            Assert.ThrowsException<AssertFailedException>(() =>
+            {
+                dotRequest.Should().NotBeNull().And.HaveContentMediaType("text/plain");
+            });
+        }
+        [TestMethod]
         public void DotHttpRequestLoader_WithContentType_ContentMediaTypeSetInRequestObject()
         {
             // Arrange

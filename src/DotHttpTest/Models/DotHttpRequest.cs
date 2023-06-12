@@ -34,17 +34,22 @@ namespace DotHttpTest.Models
         /// <summary>
         /// The URL for the request
         /// </summary>
-        public Uri? Url => Request.RequestUri;
+        public ExpressionList? Url { get; internal set; }
+
+        /// <summary>
+        /// HTTP headers
+        /// </summary>
+        public ExpressionListHeaderCollection Headers { get; internal set; } = new();
 
         /// <summary>
         /// The requested HTTP method
         /// </summary>
-        public HttpMethod Method => Request.Method;
+        public ExpressionList? Method { get; internal set; }
 
         /// <summary>
-        /// A HttpRequestMessage that is created from the .http file
+        /// The HTTP version in the request
         /// </summary>
-        internal HttpRequestMessage Request { get; set; } = new();
+        public ExpressionList? Version { get; internal set; } = ExpressionList.Create("HTTP/1.1");
 
         public bool HasStages => mStages.Any();
 
@@ -58,7 +63,10 @@ namespace DotHttpTest.Models
         /// If set to a positive value, there will be a delay after this request is sent
         /// </summary>
         public TimeSpan DelayAfterRequest { get; set; } = TimeSpan.Zero;
-        public byte[] Body { get; internal set; } = Array.Empty<byte>();
+        //public byte[] Body { get; internal set; } = Array.Empty<byte>();
+
+        public ExpressionList? Body { get; internal set; } = null;
+
         public bool HasUrl { get; internal set; }
 
         public string GetBodyAsText()
@@ -71,7 +79,7 @@ namespace DotHttpTest.Models
             {
                 return string.Empty;
             }
-            return encoding.GetString(Body);
+            return Body.ToString();
         }
 
         /// <summary>

@@ -20,7 +20,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
 
             // Assert
             request.Should().NotBeNull();
-            request.Url.Should().Be("http://localhost/index.html");
+            request.Url.ToString().Should().Be("http://localhost/index.html");
         }
 
         [TestMethod]
@@ -32,7 +32,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
 
             // Assert
             request.Should().NotBeNull();
-            request.Url.Should().Be("http://localhost/index.html");
+            request.Url!.ToString().Should().Be("http://localhost/index.html");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DotHttpTest.Providers;
+using DotHttpTest.Providers.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,12 @@ namespace DotHttpTest.Builders
             return mOptions;
         }
 
+        public ClientOptionsBuilder WithHttpClientFactory(Func<HttpClient> factory)
+        {
+            mOptions.HttpClientFactory = factory;
+            return this;
+        }
+
         public ClientOptionsBuilder ClearVariableProviders()
         {
             mVariableProviders.Clear();
@@ -31,6 +38,11 @@ namespace DotHttpTest.Builders
         public ClientOptionsBuilder UseDefaultVariableProvider()
         {
             mVariableProviders.Insert(0, new DefaultVariableProvider());
+            return this;
+        }
+        public ClientOptionsBuilder UseJsonVariableProvider()
+        {
+            mVariableProviders.Insert(0, new JsonVariableProvider());
             return this;
         }
         public ClientOptionsBuilder UseDynamicVariableProvider()

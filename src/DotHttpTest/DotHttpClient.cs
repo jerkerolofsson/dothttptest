@@ -20,8 +20,8 @@ namespace DotHttpTest
 
         public DotHttpClient(ClientOptions? options = null)
         {
-            mClient = new HttpClient();
             mOptions = options ?? ClientOptions.DefaultOptions();
+            mClient = mOptions.CreateHttpClient();
             ConfigureHttpClient(mClient, (client) =>
             {
                 ConfigureHttpClientWithOptions(client);
@@ -62,23 +62,10 @@ namespace DotHttpTest
             return DotHttpRequest.FromFile(filename);
         }
 
-        public async IAsyncEnumerable<DotHttpResponse> SendHttpFileAsync(string filename, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public async Task<DotHttpResponse> SendAsync(DotHttpRequest request, TestStatus? status, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
-
-            var requests = DotHttpRequest.FromFile(filename);
-
-            foreach(var request in requests)
-            {
-                var response = await SendAsync(request, cancellationToken);
-                yield return response;
-            }
-        }
-
-        public async Task<DotHttpResponse> SendAsync(DotHttpRequest request, CancellationToken cancellationToken = default)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            var httpRequestMessage = request.ToHttpRequestMessage();
+            var httpRequestMessage = request.ToHttpRequestMessage(status);
 
             // Create new HTTP metrics
             var metrics = new HttpRequestMetrics()

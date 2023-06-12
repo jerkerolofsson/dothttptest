@@ -20,7 +20,8 @@ namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
             // Assert
             request.Should().NotBeNull();
             request.Url.Should().NotBeNull();
-            var port = request.Url!.Port;
+            var uri = new Uri(request.Url!.ToString());
+            var port = uri.Port;
             Assert.IsTrue(port >= 0);
             Assert.IsTrue(port <= 1000);
         }
@@ -35,7 +36,8 @@ namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
             // Assert
             request.Should().NotBeNull();
             request.Url.Should().NotBeNull();
-            var uuid = request.Url!.AbsolutePath.Trim('/');
+            var uri = new Uri(request.Url!.ToString());
+            var uuid = uri!.AbsolutePath.Trim('/');
             var success = Guid.TryParse(uuid, out Guid _);
             Assert.IsTrue(success, "Failed to parse $uuid variable into Guid");
         }

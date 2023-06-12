@@ -14,20 +14,55 @@ namespace DotHttpTest.Converters
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public static HttpRequestMessage ToHttpRequestMessage(this DotHttpRequest request)
+        public static HttpRequestMessage ToHttpRequestMessage(this DotHttpRequest request, TestStatus? status)
         {
-            var httpRequestMessage = new HttpRequestMessage()
+            ArgumentNullException.ThrowIfNull(request.Method);
+            ArgumentNullException.ThrowIfNull(request.Url);
+            ArgumentNullException.ThrowIfNull(request.Version);
+
+            ByteArrayContent? content = null;
+            if(request.Body != null)
             {
-                Method = request.Request.Method,
-                RequestUri = request.Request.RequestUri,
-                Version = request.Request.Version
-            };
-            foreach (var v in request.Request.Headers)
-            {
-                httpRequestMessage.Headers.TryAddWithoutValidation(v.Key, v.Value);
+                var bytes = request.Body.ToByteArray(Encoding.UTF8, status);
+                if (bytes.Length > 0)
+                {
+                    content = new ByteArrayContent(bytes);
+                }
             }
 
-            // Todo: Body
+            var httpVersionNumber = request.Version.ToString(status);
+            if (httpVersionNumber.StartsWith("HTTP/"))
+            {
+                httpVersionNumber = httpVersionNumber[5..];
+            }
+
+            var httpRequestMessage = new HttpRequestMessage()
+            {
+                Method = new HttpMethod(request.Method.ToString(status)),
+                RequestUri = new Uri(request.Url.ToString(status)),
+                Version = new Version(httpVersionNumber),
+                Content = content
+            };
+            foreach (var headerExpression in request.Headers)
+            {
+                var headerLine = headerExpression.ToString(status);
+                var p = headerLine.IndexOf(':');
+                var key = headerLine;
+                var val = "";
+                if(p != -1)
+                {
+                    key = headerLine.Substring(0, p).Trim();
+                    val = headerLine.Substring(p+1).Trim();
+                }
+
+                if(!httpRequestMessage.Headers.TryAddWithoutValidation(key,val))
+                {
+                    if (httpRequestMessage.Content != null)
+                    {
+                        httpRequestMessage.Content.Headers.TryAddWithoutValidation(key, val);
+                    }
+                }
+            }
 
             return httpRequestMessage;
         }

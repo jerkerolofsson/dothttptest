@@ -31,9 +31,15 @@ namespace DotHttpTest.Verification.Http
                     return ToDouble(value.ToString()) <= ToDouble(expectedValue);
 
                 case VerificationOperation.Equals:
-                    if(value != null && expectedValue is not null)
+                    if (value != null && expectedValue is not null)
                     {
                         return value.ToString()!.Equals(expectedValue);
+                    }
+                    return false;
+                case VerificationOperation.NotEquals:
+                    if (value != null && expectedValue is not null)
+                    {
+                        return ! (value.ToString()!.Equals(expectedValue));
                     }
                     return false;
                 default:

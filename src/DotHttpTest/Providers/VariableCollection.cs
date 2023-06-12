@@ -11,22 +11,17 @@ namespace DotHttpTest.Providers
     /// </summary>
     public class VariableCollection : IVariableProvider
     {
-        private readonly Dictionary<string, string> mVariables = new();
+        private readonly Dictionary<string, Variable> mVariables = new();
 
         public void SetVariableValue(string variableName, string value)
         {
-            mVariables[variableName] = value;
+            mVariables[variableName] = new Variable() { Value = value };
         }
 
-        public string? GetVariableValue(string variableName)
+        public Variable? GetVariableValue(string variableName)
         {
-            mVariables.TryGetValue(variableName, out string? value);
+            mVariables.TryGetValue(variableName, out Variable? value);
             return value;
         }
-
-        public Dictionary<string, string> ToDictionary()
-        {
-            return mVariables;
-        }
-    }
+            }
 }

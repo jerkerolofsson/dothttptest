@@ -20,8 +20,11 @@ namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
             // Assert
             dotRequest.Should().NotBeNull();
             dotRequest.Body.Should().NotBeNull();
-            dotRequest.Body.Should().NotBeEmpty();
-            dotRequest.Body.Length.Should().Be(5);
+
+            var bytes = dotRequest.Body.ToByteArray(Encoding.UTF8, null);
+
+            bytes.Should().NotBeEmpty();
+            bytes.Length.Should().Be(5);
         }
 
         [TestMethod]

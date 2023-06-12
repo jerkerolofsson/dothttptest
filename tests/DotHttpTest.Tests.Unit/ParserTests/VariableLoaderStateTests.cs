@@ -21,7 +21,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests
             state.ParseVariableAssignmentLine("@host=localhost");
 
             // Act
-            var line = state.ReplaceDataVariables("GET http://{{host}}/index.html HTTP/1.1");
+            var line = state.ReplaceDataVariables("GET http://{{host}}/index.html HTTP/1.1").ToString();
 
             // Assert
             Assert.AreEqual("GET http://localhost/index.html HTTP/1.1", line);
@@ -34,7 +34,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests
             state.ParseVariableAssignmentLine("@method=GET");
 
             // Act
-            var line = state.ReplaceDataVariables("{{method}} http://localhost/index.html HTTP/1.1");
+            var line = state.ReplaceDataVariables("{{method}} http://localhost/index.html HTTP/1.1").ToString();
 
             // Assert
             Assert.AreEqual("GET http://localhost/index.html HTTP/1.1", line);
@@ -48,7 +48,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests
             state.ParseVariableAssignmentLine("@url=http://localhost/index.html");
 
             // Act
-            var line = state.ReplaceDataVariables("{{method}} {{url}} HTTP/1.1");
+            var line = state.ReplaceDataVariables("{{method}} {{url}} HTTP/1.1").ToString();
 
             // Assert
             Assert.AreEqual("GET http://localhost/index.html HTTP/1.1", line);
@@ -62,7 +62,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests
             state.ParseVariableAssignmentLine("@version=HTTP/1.1");
 
             // Act
-            var line = state.ReplaceDataVariables("GET http://localhost/index.html {{version}}");
+            var line = state.ReplaceDataVariables("GET http://localhost/index.html {{version}}").ToString();
 
             // Assert
             Assert.AreEqual("GET http://localhost/index.html HTTP/1.1", line);
@@ -78,7 +78,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests
             state.ParseVariableAssignmentLine("@key1=val1");
 
             // Assert
-            Assert.AreEqual("val1", state.GetVariable("key1"));
+            Assert.AreEqual("val1", state.GetVariable("key1").ToString());
         }
 
         [TestMethod]
@@ -92,7 +92,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests
             state.ParseVariableAssignmentLine("@key1=val5");
 
             // Assert
-            Assert.AreEqual("val5", state.GetVariable("key1"));
+            Assert.AreEqual("val5", state.GetVariable("key1").ToString());
         }
     }
 }

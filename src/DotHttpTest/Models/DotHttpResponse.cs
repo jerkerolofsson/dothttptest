@@ -31,6 +31,5 @@ namespace DotHttpTest.Models
         {
             return HttpResponse;
         }
-
     }
 }

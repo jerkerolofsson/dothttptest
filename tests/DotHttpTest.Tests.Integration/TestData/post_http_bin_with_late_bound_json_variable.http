@@ -1,0 +1,16 @@
+POST http://localhost:13080/post HTTP/1.1
+Content-Type: application/json
+
+{
+    "key1": "val1"
+}
+
+###
+
+# @verify json $.json.key1 == http://localhost:13080/post
+POST http://localhost:13080/post HTTP/1.1
+Content-Type: application/json
+
+{
+    "key1": "{{$json.url}}"
+}

@@ -31,13 +31,20 @@ namespace DotHttpTest.Runner.Utils
         {
             try
             {
-                var response = await client.SendAsync(request, CancellationToken.None);
+                // Update response with late bound variables (such as thonse from the last response)
+
+                var response = await client.SendAsync(request, testStatus, CancellationToken.None);
+
+                // Save the last response in case there are variables that refer to it
+                testStatus.PreviousResponse = response;
+
+                // Log results and passed/failed checks
                 foreach (var check in response.Results)
                 {
                     response.Metrics.AddCheck(check);
                     testStatus.AddResult(check);
                 }
-                
+
                 // Log response metrics
                 testStatus.AddRequestMetrics(response.Metrics);
                 foreach (var callback in callbacks)

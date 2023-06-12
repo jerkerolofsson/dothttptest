@@ -11,7 +11,16 @@ namespace DotHttpTest.Providers
     /// </summary>
     public class DynamicVariableProvider : IVariableProvider
     {
-        public string? GetVariableValue(string variableName)
+        public Variable? GetVariableValue(string variableName)
+        {
+            var val = CalculateVariableValue(variableName);
+            if (val != null)
+            {
+                return new Variable() { Value = val };
+            }
+            return null;
+        }
+        public string? CalculateVariableValue(string variableName)
         {
             switch(variableName)
             {
