@@ -21,6 +21,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="TestData\post_with_json_array_lookup_in_requesturi.http">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\get_with_json_variable_in_requesturi.http">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\post_http_bin_with_json_not_eq.http">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

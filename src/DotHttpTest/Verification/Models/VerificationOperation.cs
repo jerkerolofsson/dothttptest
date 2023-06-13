@@ -9,12 +9,16 @@ namespace DotHttpTest.Verification.Models
     public enum VerificationOperation
     {
         Exists,
-        NotEquals,
+        NotExists,
+
         Equals,
+        NotEquals,
+
         GreaterOrEquals,
         LessOrEquals,
         Less,
         Greater,
+
         RegexMatch
     }
 }

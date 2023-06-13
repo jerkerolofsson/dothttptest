@@ -1,5 +1,4 @@
-﻿using DotHttpTest.Verification.Http;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +27,12 @@ namespace DotHttpTest.Verification.Json
             var token = root.SelectToken(selector);
             if (token == null)
             {
+                if (check.Operation == VerificationOperation.NotExists)
+                {
+                    result.IsSuccess = true;
+                    return;
+                }
+
                 result.Error = $"json: Not found: {selector}";
                 result.IsSuccess = false;
                 return;

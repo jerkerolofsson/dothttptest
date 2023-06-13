@@ -23,6 +23,8 @@ namespace DotHttpTest.Verification.Parser
 
         private static List<VerificationOperatorPattern> mOperatorMap = new()
         {
+            new ("(not exists)", VerificationOperation.NotExists ),
+
             new ("(==|\\sis\\s)", VerificationOperation.Equals ),
             new ("(!=)", VerificationOperation.NotEquals ),
             new ("(exists)", VerificationOperation.Exists ),

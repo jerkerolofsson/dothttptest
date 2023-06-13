@@ -1,0 +1,7 @@
+GET http://localhost:13080/get HTTP/1.1
+
+###
+
+# @verify json $.args.key1 exists
+# @verify json $.args.key2 not exists
+GET http://localhost:13080/get?key1={{$json.origin}} HTTP/1.1

@@ -80,6 +80,44 @@ namespace DotHttpTest.Tests.Integration
             Assert.AreEqual(0, status.FailedChecks.Count);
         }
 
+
+        [TestMethod]
+        public async Task Run_WithJsonArrayLookup_CheckPassed()
+        {
+            // Arrange
+            var runner = new TestPlanRunnerOptionsBuilder()
+                .LoadHttpFile("TestData/post_with_json_array_lookup_in_requesturi.http")
+                .ConfigureClientOptions((client) =>
+                {
+                    client.WithHttpClientFactory(this.CreateHttpClient);
+                })
+                .Build();
+
+            // Act
+            var status = await runner.RunAsync();
+
+            // Assert
+            Assert.AreEqual(0, status.FailedChecks.Count);
+        }
+        [TestMethod]
+        public async Task Run_WithJsonVariableInRequestUri_CheckPassed()
+        {
+            // Arrange
+            var runner = new TestPlanRunnerOptionsBuilder()
+                .LoadHttpFile("TestData/get_with_json_variable_in_requesturi.http")
+                .ConfigureClientOptions((client) =>
+                {
+                    client.WithHttpClientFactory(this.CreateHttpClient);
+                })
+                .Build();
+
+            // Act
+            var status = await runner.RunAsync();
+
+            // Assert
+            Assert.AreEqual(0, status.FailedChecks.Count);
+        }
+
         [TestMethod]
         public async Task Run_WithJsonNotEqualsCheck_CheckPassed()
         {

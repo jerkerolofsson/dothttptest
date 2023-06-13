@@ -5,18 +5,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotHttpTest.Verification.Http
+namespace DotHttpTest.Verification
 {
     public class ValueVerifier
     {
         protected bool CompareValue(object value, string? expectedValue, VerificationOperation operation)
         {
-            if(value is null)
+            if (value is null)
             {
+                if (operation == VerificationOperation.NotExists)
+                {
+                    return true;
+                }
+
                 return false;
             }
 
-            switch(operation)
+            switch (operation)
             {
                 case VerificationOperation.Exists:
                     return true;
@@ -39,7 +44,7 @@ namespace DotHttpTest.Verification.Http
                 case VerificationOperation.NotEquals:
                     if (value != null && expectedValue is not null)
                     {
-                        return ! (value.ToString()!.Equals(expectedValue));
+                        return !value.ToString()!.Equals(expectedValue);
                     }
                     return false;
                 default:
@@ -50,11 +55,11 @@ namespace DotHttpTest.Verification.Http
 
         private double ToDouble(string? value)
         {
-            if(value is null)
+            if (value is null)
             {
                 return double.MinValue;
             }
-            double.TryParse(value, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out double val);
+            double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out double val);
             return val;
         }
     }

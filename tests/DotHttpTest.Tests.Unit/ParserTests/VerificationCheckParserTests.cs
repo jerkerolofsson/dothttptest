@@ -34,6 +34,15 @@ namespace DotHttpTest.Tests.Unit.ParserTests
         }
 
         [TestMethod]
+        public void ParseVerificationCheck_WithNotExistsOperator_OperatorIsSet()
+        {
+            // Act
+            var check = VerificationCheckParser.Parse("headers cookie not exists");
+
+            // Assert
+            Assert.AreEqual(VerificationOperation.NotExists, check.Operation);
+        }
+        [TestMethod]
         public void ParseVerificationCheck_WithoutGreaterOrEquals_OperatorIsSet()
         {
             // Act

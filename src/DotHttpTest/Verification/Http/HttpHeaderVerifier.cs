@@ -17,6 +17,12 @@ namespace DotHttpTest.Verification.Http
             var headers = response.HttpResponse.Headers.Where(x => x.Key.Equals(headerName, StringComparison.InvariantCultureIgnoreCase)).ToList();
             if (headers.Count == 0)
             {
+                if(check.Operation == VerificationOperation.NotExists)
+                {
+                    result.IsSuccess = true;
+                    return;
+                }
+
                 result.Error = $"HTTP Header '{headerName}' was not found";
                 result.IsSuccess = false;
             }

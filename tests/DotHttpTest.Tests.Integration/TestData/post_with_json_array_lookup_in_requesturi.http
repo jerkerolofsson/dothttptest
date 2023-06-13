@@ -1,0 +1,37 @@
+POST http://localhost:13080/post HTTP/1.1
+
+{
+    "key1": ["a", "b", "c"]
+}
+
+###
+
+# @verify json $.args.key1 == a
+GET http://localhost:13080/get?key1={{$json.json.key1[0]}} HTTP/1.1
+
+###
+
+POST http://localhost:13080/post HTTP/1.1
+
+{
+    "key1": ["a", "b", "c"]
+}
+
+###
+
+# @verify json $.args.key1 == b
+GET http://localhost:13080/get?key1={{$json.json.key1[1]}} HTTP/1.1
+
+###
+
+POST http://localhost:13080/post HTTP/1.1
+
+{
+    "key1": ["a", "b", "c"]
+}
+
+###
+
+# @verify json $.args.key1 == c
+GET http://localhost:13080/get?key1={{$json.json.key1[-1:]}} HTTP/1.1
+
