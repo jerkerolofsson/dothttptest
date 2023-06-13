@@ -83,6 +83,7 @@ namespace DotHttpTest
             metrics.StatusCode = httpResponse.StatusCode;
 
             var response = new DotHttpResponse(httpResponse, metrics);
+            response.RequestUri = httpRequestMessage.RequestUri;
             response.Request = request;
             if (mOptions.Request.ReadContent)
             {

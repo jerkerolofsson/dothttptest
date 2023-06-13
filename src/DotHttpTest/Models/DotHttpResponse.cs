@@ -19,6 +19,7 @@ namespace DotHttpTest.Models
         public byte[]? ContentBytes { get; internal set; }
         public HttpRequestMetrics Metrics { get; init; }
         public List<VerificationCheckResult> Results { get; internal set; }
+        public Uri? RequestUri { get; internal set; }
 
         internal DotHttpResponse(HttpResponseMessage httpResponse, HttpRequestMetrics metrics)        
         {

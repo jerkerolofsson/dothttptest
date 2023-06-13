@@ -73,8 +73,16 @@ namespace dothttp.Handlers
             table.AddColumn("URL");
             foreach (var request in stage.Requests)
             {
-                var url = request.Url == null ? "" : request.Url.ToString();
-                table.AddRow(request.RequestName??"", request.Method.ToString(), url);
+                try
+                {
+                    var url = request.Url == null ? "" : request.Url.ToString(currentState);
+                    table.AddRow(request.RequestName ?? "", request.Method.ToString(currentState), url);
+                }
+                catch (InvalidOperationException) 
+                { 
+                    // If a variable is part of the request URL/Method but we don't yet know the value,
+                    // the URL cannot be converted to string..
+                }
             }
 
             Layout["Stage"].Update(table);
