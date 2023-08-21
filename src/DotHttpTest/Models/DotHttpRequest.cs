@@ -138,6 +138,18 @@ namespace DotHttpTest.Models
             mVerificationChecks.Add(VerificationCheckParser.Parse(val));
         }
 
+        public static List<DotHttpRequest> Parse(string httpFileContents, ClientOptions? options = null)
+        {
+            var request = DotHttpRequestLoader.ParseRequests(httpFileContents.Split('\n'), options);
+            return request;
+        }
+
+        public static List<DotHttpRequest> Parse(string[] httpFileLines, ClientOptions? options = null)
+        {
+            var request = DotHttpRequestLoader.ParseRequests(httpFileLines, options);
+            return request;
+        }
+
         public static List<DotHttpRequest> FromFile(string httpFilePath, ClientOptions? options = null)
         {
             var request = DotHttpRequestLoader.ParseRequests(File.ReadAllLines(httpFilePath), options);
