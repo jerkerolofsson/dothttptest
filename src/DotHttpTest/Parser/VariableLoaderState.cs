@@ -85,7 +85,7 @@ namespace DotHttpTest.Parser
         {
             if (mLocalVariables.TryGetValue(name, out string? val))
             {
-                return new Variable()
+                return new StringVariable()
                 {
                     Value = val
                 };

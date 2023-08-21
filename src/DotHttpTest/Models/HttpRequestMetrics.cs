@@ -33,6 +33,8 @@ namespace DotHttpTest.Models
         /// Time from request until the response headers and content has been received
         /// </summary>
         public Counter HttpRequestDuration { get; set; } = new("http_req_duration", "s");
+        public Counter HttpBytesSent { get; set; } = new("http_bytes_sent", "B");
+        public Counter HttpBytesReceived { get; set; } = new("http_bytes_received", "B");
         public DotHttpRequest? Request { get; internal set; }
 
         internal void AddCheck(VerificationCheckResult check)

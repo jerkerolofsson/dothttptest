@@ -6,18 +6,7 @@ using System.Threading.Tasks;
 
 namespace DotHttpTest.Models
 {
-    public class Variable : Expression
+    public abstract class Variable : Expression
     {
-        public string? Value { get; set; }
-
-        public override string? ToString()
-        {
-            return Value;
-        }
-
-        public override string? ToString(TestStatus? status)
-        {
-            return Value;
-        }
     }
 }

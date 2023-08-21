@@ -15,7 +15,7 @@ namespace DotHttpTest.Providers
 
         public void SetVariableValue(string variableName, string value)
         {
-            mVariables[variableName] = new Variable() { Value = value };
+            mVariables[variableName] = new StringVariable() { Value = value };
         }
 
         public Variable? GetVariableValue(string variableName)

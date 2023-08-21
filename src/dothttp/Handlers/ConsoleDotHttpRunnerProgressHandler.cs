@@ -156,6 +156,10 @@ namespace dothttp.Handlers
             AddRow(table, testStatus.HttpRequestFails);
             AddRow(table, testStatus.HttpRequestsPerSecond);
             AddRow(table, testStatus.HttpRequestDuration);
+
+            AddRow(table, testStatus.HttpBytesSent);
+            AddRow(table, testStatus.HttpBytesReceived);
+
             foreach (var pair in testStatus.HttpResponseStatusCodes)
             {
                 AddRow(table, pair.Value);

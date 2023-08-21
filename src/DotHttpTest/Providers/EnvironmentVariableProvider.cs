@@ -20,7 +20,7 @@ namespace DotHttpTest.Providers
             var val = Environment.GetEnvironmentVariable(variableName, mEnvironmentVariableTarget);
             if(val != null)
             {
-                return new Variable() { Value = val };
+                return new StringVariable() { Value = val };
             }
             return null;
         }

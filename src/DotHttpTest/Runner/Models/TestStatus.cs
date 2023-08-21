@@ -22,6 +22,9 @@ namespace DotHttpTest.Runner.Models
         public Counter ProgressPercent { get; set; } = new("test_progress", "%");
         public Trend UserCount { get; set; } = new("vus", "#", 50);
         public Gauge UserMaxCount { get; set; } = new("vus_max", "#");
+
+        public Counter HttpBytesSent { get; set; } = new("http_bytes_sent", "B");
+        public Counter HttpBytesReceived{ get; set; } = new("http_bytes_sent", "B");
         public Counter HttpRequests { get; set; } = new("http_reqs", "#");
         public Counter HttpRequestFails { get; set; } = new("http_req_failed", "#");
         public Trend HttpRequestDuration { get; set; } = new("http_req_duration", "s", 1000);
@@ -65,6 +68,9 @@ namespace DotHttpTest.Runner.Models
             // Checks/Tests
             var passed = metrics.ChecksPassed.Value;
             var failed = metrics.ChecksFailed.Value;
+
+            HttpBytesSent.Increment(metrics.HttpBytesSent.Value);
+            HttpBytesReceived.Increment(metrics.HttpBytesReceived.Value);
 
             ChecksPassed.Increment(passed);
             ChecksFailed.Increment(failed);
