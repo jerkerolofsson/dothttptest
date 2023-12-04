@@ -53,7 +53,7 @@ namespace DotHttpTest.Runner.Utils
                 }
 
                 // Delay if configured for the request
-                if(request.DelayAfterRequest > TimeSpan.Zero)
+                if (request.DelayAfterRequest > TimeSpan.Zero)
                 {
                     await Task.Delay(request.DelayAfterRequest);
                 }
