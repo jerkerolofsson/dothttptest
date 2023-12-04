@@ -53,7 +53,7 @@ namespace DotHttpTest.Runner
                     await callback.OnStageStartedAsync(stage, testStatus);
                 }
 
-                if (stage.Attributes.Duration == TimeSpan.Zero)
+                if (!stage.Attributes.HasDurationOrLoopAttributes)
                 {
                     foreach (var request in stage.Requests)
                     {

@@ -57,6 +57,10 @@ namespace DotHttpTest.Models
         /// Returns all stages
         /// </summary>
         public IReadOnlyList<StageAttributes> Stages => mStages.AsReadOnly();
+
+        /// <summary>
+        /// Verification checks
+        /// </summary>
         internal IReadOnlyList<VerificationCheck> VerificationChecks => mVerificationChecks.AsReadOnly();
 
         /// <summary>
@@ -129,11 +133,22 @@ namespace DotHttpTest.Models
             }
         }
 
-        private void AddStage(string val)
+        internal void AddStage(StageAttributes stage)
         {
-            mStages.Add(StageParser.Parse(val));
+            mStages.Add(stage);
         }
-        private void AddVerificationCheck(string val)
+
+        internal void AddStage(string val)
+        {
+            AddStage(StageParser.Parse(val));
+        }
+
+        internal void ClearStages()
+        {
+            mStages.Clear();
+        }
+
+        internal void AddVerificationCheck(string val)
         {
             mVerificationChecks.Add(VerificationCheckParser.Parse(val));
         }

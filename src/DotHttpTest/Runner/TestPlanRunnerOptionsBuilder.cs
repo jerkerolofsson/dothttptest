@@ -33,6 +33,18 @@ namespace DotHttpTest.Runner
                 builder.LoadHttpFile(httpFilePath, options);
             });
         }
+        /// <summary>
+        /// Loads all requests and stages from the .http file, configuring each request with the builder
+        /// </summary>
+        /// <param name="httpFilePath"></param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public TestPlanRunnerOptionsBuilder LoadHttpFile(string httpFilePath, Action<DotHttpRequestBuilder> requestBuilder)
+        {
+            return ConfigureTestPlan((builder, options) => {
+                builder.LoadHttpFile(httpFilePath, requestBuilder, options);
+            });
+        }
         public TestPlanRunnerOptionsBuilder ConfigureTestPlan(Action<TestPlanBuilder, ClientOptions> testPlanConfigurator)
         {
             testPlanConfigurator(mTestPlanBuilder, mClientOptions);

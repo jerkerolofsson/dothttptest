@@ -10,6 +10,11 @@ namespace DotHttpTest.Models
 {
     public class ClientOptions
     {
+        /// <summary>
+        /// If false, and exception is thrown if the variable is missing
+        /// </summary>
+        public bool IgnoreMissingVariables { get; set; } = false;
+
         public IReadOnlyList<IVariableProvider>? VariableProviders { get; internal set; }
 
         public RequestOptions Request { get; set; } = new();

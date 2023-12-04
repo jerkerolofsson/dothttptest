@@ -1,4 +1,5 @@
-﻿using DotHttpTest.Runner.Models;
+﻿using DotHttpTest.Builders;
+using DotHttpTest.Runner.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,6 +51,20 @@ namespace DotHttpTest.Runner
         private List<DotHttpRequest> mRequests = new();
         private TestPlan mTestPlan = new TestPlan();
 
+        public TestPlanBuilder LoadHttpFile(string httpFilePath, Action<DotHttpRequestBuilder> requestConfigurator, ClientOptions? options = null)
+        {
+            options ??= ClientOptions.DefaultOptions();
+
+            mTestPlan.Name = Path.GetFileNameWithoutExtension(httpFilePath);
+            var requests = DotHttpRequest.FromFile(httpFilePath, options);
+            foreach(var request in requests) 
+            {
+                var requestBuilder = new DotHttpRequestBuilder(request);
+                requestConfigurator(requestBuilder);
+            }
+            mRequests.AddRange(requests);
+            return this;
+        }
         public TestPlanBuilder LoadHttpFile(string httpFilePath, ClientOptions? options = null)
         {
             options ??= ClientOptions.DefaultOptions();

@@ -24,7 +24,7 @@ namespace DotHttpTest.Runner.Models
         public Gauge UserMaxCount { get; set; } = new("vus_max", "#");
 
         public Counter HttpBytesSent { get; set; } = new("http_bytes_sent", "B");
-        public Counter HttpBytesReceived{ get; set; } = new("http_bytes_sent", "B");
+        public Counter HttpBytesReceived{ get; set; } = new("http_bytes_recv", "B");
         public Counter HttpRequests { get; set; } = new("http_reqs", "#");
         public Counter HttpRequestFails { get; set; } = new("http_req_failed", "#");
         public Trend HttpRequestDuration { get; set; } = new("http_req_duration", "s", 1000);

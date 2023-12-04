@@ -12,8 +12,15 @@ namespace DotHttpTest.Runner
         private readonly int mPrevTargetCount;
         private readonly StageAttributes mStage;
         private readonly Stopwatch mStopwatch;
+        private int mLoopCounter = 0;
 
-        public bool IsCompleted => mStopwatch.Elapsed >= mStage.Duration;
+        public bool IsCompleted
+        {
+            get
+            {
+                return mStopwatch.Elapsed >= mStage.Duration;
+            }
+        }
 
         public StageOrchestrator(int prevTargetCount, StageAttributes stage)
         {
