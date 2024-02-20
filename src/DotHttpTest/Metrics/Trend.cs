@@ -55,8 +55,10 @@ namespace DotHttpTest.Metrics
             }
         }
 
-        public double P90 => CalculateP(0.95);
+        public double P90 => CalculateP(0.90);
         public double P95 => CalculateP(0.95);
+        public double Q3 => CalculateP(0.75);
+        public double Q1 => CalculateP(0.25);
         public double MaxValue { get; protected set; } = double.MinValue;
         public double MinValue { get; protected set; } = double.MaxValue;
         public double Latest { get; protected set; } = double.MaxValue;

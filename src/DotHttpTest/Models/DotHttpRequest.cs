@@ -97,6 +97,20 @@ namespace DotHttpTest.Models
         }
 
         /// <summary>
+        /// Returns all metadata for the request.
+        /// This includes all comments that looks like this:
+        /// # @someKey someValue
+        /// or
+        /// # @someKey
+        /// </summary>
+        /// <returns></returns>
+        public IDictionary<string,string?> GetMetadata()
+        {
+            mMetadata ??= new();
+            return mMetadata;
+        }
+
+        /// <summary>
         /// Sets a metadata field from a comment that looks like this
         /// # @name val
         /// </summary>
@@ -165,6 +179,12 @@ namespace DotHttpTest.Models
             return request;
         }
 
+        public static List<DotHttpRequest> FromStream(Stream stream, ClientOptions? options = null)
+        {
+            using var reader = new StreamReader(stream, leaveOpen: true);
+            var request = DotHttpRequestLoader.ParseRequests(reader.ReadToEnd().Split('\n'), options);
+            return request;
+        }
         public static List<DotHttpRequest> FromFile(string httpFilePath, ClientOptions? options = null)
         {
             var request = DotHttpRequestLoader.ParseRequests(File.ReadAllLines(httpFilePath), options);

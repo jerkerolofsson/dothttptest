@@ -27,8 +27,8 @@ namespace DotHttpTest.Runner.Models
         public Counter HttpBytesReceived{ get; set; } = new("http_bytes_recv", "B");
         public Counter HttpRequests { get; set; } = new("http_reqs", "#");
         public Counter HttpRequestFails { get; set; } = new("http_req_failed", "#");
-        public Trend HttpRequestDuration { get; set; } = new("http_req_duration", "s", 1000);
-        public Trend HttpRequestsPerSecond { get; set; } = new("http_reqs_per_sec", "r/s", 100);
+        public Trend HttpRequestDuration { get; set; } = new("http_req_duration", "s", 5000);
+        public Trend HttpRequestsPerSecond { get; set; } = new("http_reqs_per_sec", "r/s", 5000);
 
         public Counter ChecksPassed { get; set; } = new("checks_passed", "#");
         public Counter ChecksFailed { get; set; } = new("checks_failed", "#");
