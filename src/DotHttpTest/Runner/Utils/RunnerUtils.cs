@@ -1,6 +1,7 @@
 ﻿using DotHttpTest.Runner.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,13 +13,14 @@ namespace DotHttpTest.Runner.Utils
         internal static async Task RunOneIterationAsync(DotHttpClient client,
             IReadOnlyList<DotHttpRequest> requests,
             TestStatus testStatus,
-            IReadOnlyList<ITestPlanRunnerProgressHandler> callbacks)
+            IReadOnlyList<ITestPlanRunnerProgressHandler> callbacks,
+            Stopwatch testStopwatch)
         {
             // Send a single report and log it
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             foreach (var request in requests)
             {
-                await ProcessRequestAsync(client, request, testStatus, callbacks);
+                await ProcessRequestAsync(client, request, testStatus, callbacks, testStopwatch);
             }
             testStatus.Iterations.Increment(1);
             testStatus.IterationDuration.Log(stopwatch.Elapsed.TotalSeconds);
@@ -27,7 +29,8 @@ namespace DotHttpTest.Runner.Utils
             DotHttpClient client,
             DotHttpRequest request,
             TestStatus testStatus,
-            IReadOnlyList<ITestPlanRunnerProgressHandler> callbacks)
+            IReadOnlyList<ITestPlanRunnerProgressHandler> callbacks,
+            System.Diagnostics.Stopwatch stopwatch)
         {
             try
             {
@@ -46,6 +49,7 @@ namespace DotHttpTest.Runner.Utils
                 }
 
                 // Log response metrics
+                testStatus.ElapsedSeconds.SetValue(stopwatch.Elapsed.TotalSeconds);
                 testStatus.AddRequestMetrics(response.Metrics);
                 foreach (var callback in callbacks)
                 {

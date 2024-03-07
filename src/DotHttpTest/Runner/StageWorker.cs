@@ -2,6 +2,7 @@
 using DotHttpTest.Runner.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -15,6 +16,7 @@ namespace DotHttpTest.Runner
         private readonly DotHttpClient mClient;
         private List<DotHttpRequest> mRequests = new();
         private readonly IReadOnlyList<ITestPlanRunnerProgressHandler> mCallbacks;
+        private readonly Stopwatch mTestStopwatch;
         private readonly CancellationTokenSource mCancellationTokenSource;
         private readonly CancellationToken mCancellationToken;
         private readonly ManualResetEventSlim mRunEvent = new ManualResetEventSlim(true);
@@ -24,11 +26,13 @@ namespace DotHttpTest.Runner
             TestStatus testStatus, 
             ClientOptions options,
             IReadOnlyList<ITestPlanRunnerProgressHandler> callbacks,
+            Stopwatch testStopwatch,
             CancellationToken stoppingToken)
         {
             mTestStatus = testStatus;
             mClient = new DotHttpClient(options);
             mCallbacks = callbacks;
+            mTestStopwatch = testStopwatch;
             mCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
             mCancellationToken = mCancellationTokenSource.Token;
         }
@@ -103,7 +107,7 @@ namespace DotHttpTest.Runner
 
         public async Task RunOneIterationAsync()
         {
-            await RunnerUtils.RunOneIterationAsync(mClient, mRequests, mTestStatus, mCallbacks);
+            await RunnerUtils.RunOneIterationAsync(mClient, mRequests, mTestStatus, mCallbacks, mTestStopwatch);
         }
 
         public void Dispose()

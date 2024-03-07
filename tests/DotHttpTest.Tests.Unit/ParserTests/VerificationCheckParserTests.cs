@@ -20,6 +20,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests
             var check = VerificationCheckParser.Parse("http status-code 200");
 
             // Assert
+            Assert.AreEqual("http", check.VerifierId);
             Assert.AreEqual(VerificationOperation.Equals, check.Operation);
         }
 
@@ -129,6 +130,43 @@ namespace DotHttpTest.Tests.Unit.ParserTests
 
             // Assert
             Assert.AreEqual(VerificationOperation.RegexMatch, check.Operation);
+        }
+
+
+        [TestMethod]
+        public void ParseVerificationCheck_WithJsonCheckWithoutOperator_OperatorIsEquals()
+        {
+            // Act
+            var check = VerificationCheckParser.Parse("json $.Count 1");
+
+            // Assert
+            Assert.AreEqual("1", check.ExpectedValue);
+            Assert.AreEqual("json", check.VerifierId);
+            Assert.AreEqual(VerificationOperation.Equals, check.Operation);
+        }
+
+        [TestMethod]
+        public void ParseVerificationCheck_WithJsonCheckWithOperator_OperatorIsEquals()
+        {
+            // Act
+            var check = VerificationCheckParser.Parse("json $.Count == 1");
+
+            // Assert
+            Assert.AreEqual("1", check.ExpectedValue);
+            Assert.AreEqual("json", check.VerifierId);
+            Assert.AreEqual(VerificationOperation.Equals, check.Operation);
+        }
+
+        [TestMethod]
+        public void ParseVerificationCheck_WithJsonCheckString_OperatorIsEquals()
+        {
+            // Act
+            var check = VerificationCheckParser.Parse("json $.Count == A B");
+
+            // Assert
+            Assert.AreEqual("A B", check.ExpectedValue);
+            Assert.AreEqual("json", check.VerifierId);
+            Assert.AreEqual(VerificationOperation.Equals, check.Operation);
         }
     }
 }

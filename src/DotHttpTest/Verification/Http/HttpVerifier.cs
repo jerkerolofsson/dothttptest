@@ -18,6 +18,10 @@ namespace DotHttpTest.Verification.Http
                     result.ActualValue = ((int)response.StatusCode).ToString();
                     result.IsSuccess = CompareValue((int)response.StatusCode, check.ExpectedValue, check.Operation);
                     break;
+                case "duration":
+                    double duration = response.Metrics.HttpRequestDuration.Value;
+                    result.IsSuccess = CompareValue((int)(duration*1000), check.ExpectedValue, check.Operation);
+                    break;
                 default:
                     result.IsSuccess = false;
                     result.Error = $"Unknown property: {result.Check.PropertyId}";

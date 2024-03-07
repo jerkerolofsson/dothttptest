@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace DotHttpTest.Runner
         private readonly ClientOptions mOptions;
         private List<DotHttpRequest> mRequests = new();
         private readonly IReadOnlyList<ITestPlanRunnerProgressHandler> mCallbacks;
+        private readonly Stopwatch mTestStopwatch;
         private readonly CancellationToken mStoppingToken;
         private List<StageWorker> mActiveWorkers = new List<StageWorker>();
         private List<StageWorker> mIdlePool = new List<StageWorker>();
@@ -23,11 +25,13 @@ namespace DotHttpTest.Runner
             TestStatus testStatus,
             ClientOptions options,
             IReadOnlyList<ITestPlanRunnerProgressHandler> callbacks,
+            Stopwatch testStopwatch,
             CancellationToken stoppingToken) 
         {
             mTestStatus = testStatus;
             mOptions = options;
             mCallbacks = callbacks;
+            mTestStopwatch = testStopwatch;
             mStoppingToken = stoppingToken;
         }
 
@@ -105,7 +109,7 @@ namespace DotHttpTest.Runner
                     }
                     else
                     {
-                        worker = new StageWorker(mTestStatus, mOptions, mCallbacks, mStoppingToken);
+                        worker = new StageWorker(mTestStatus, mOptions, mCallbacks, mTestStopwatch, mStoppingToken);
                     }
                     worker.SetRequests(mRequests);
                     worker.Start();

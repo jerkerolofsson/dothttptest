@@ -60,7 +60,10 @@ namespace DotHttpTest.Runner.Models
 
             var seconds = this.ElapsedSeconds.Value;
             var requests = this.HttpRequests.Value;
-            HttpRequestsPerSecond.Log(requests / seconds);
+            if (seconds > 0)
+            {
+                HttpRequestsPerSecond.Log(requests / seconds);
+            }
 
             if (!mHttpResponseStatusCodes.ContainsKey(metrics.StatusCode))
             {
