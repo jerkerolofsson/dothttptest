@@ -37,8 +37,8 @@ namespace DotHttpTest.Verification.Json
                 result.IsSuccess = false;
                 return;
             }
-
-            if(!CompareValue(token.ToString(), check.ExpectedValue, check.Operation))
+            result.ActualValue = token.ToString();
+            if (!CompareValue(result.ActualValue, check.ExpectedValue, check.Operation))
             {
                 result.Error = $"json: Expected: {check.ExpectedValue} but got {token.ToString()}";
                 result.IsSuccess = false;

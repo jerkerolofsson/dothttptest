@@ -14,7 +14,7 @@
 		<Authors>Jerker Olofsson</Authors>
 		<Company>Jerker Olofsson</Company>
 		<PackageId>DotNetTestCLI</PackageId>
-		<Version>1.3.3</Version>
+		<Version>1.3.4</Version>
 	</PropertyGroup>
 
   <ItemGroup>

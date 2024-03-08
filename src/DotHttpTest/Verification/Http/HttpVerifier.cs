@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +22,7 @@ namespace DotHttpTest.Verification.Http
                     break;
                 case "duration":
                     double duration = response.Metrics.HttpRequestDuration.Value;
+                    result.ActualValue = duration.ToString(CultureInfo.InvariantCulture);
                     result.IsSuccess = CompareValue((int)(duration*1000), check.ExpectedValue, check.Operation);
                     break;
                 default:
