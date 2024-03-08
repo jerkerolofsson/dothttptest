@@ -22,8 +22,9 @@ namespace DotHttpTest.Verification.Http
                     break;
                 case "duration":
                     double duration = response.Metrics.HttpRequestDuration.Value;
-                    result.ActualValue = duration.ToString(CultureInfo.InvariantCulture);
-                    result.IsSuccess = CompareValue((int)(duration*1000), check.ExpectedValue, check.Operation);
+                    var millis = (int)(Math.Round(duration * 1000));
+                    result.ActualValue = millis.ToString();
+                    result.IsSuccess = CompareValue(millis, check.ExpectedValue, check.Operation);
                     break;
                 default:
                     result.IsSuccess = false;

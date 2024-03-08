@@ -23,8 +23,38 @@ namespace DotHttpTest.Verification.Json
                 return;
             }
             var text = Encoding.UTF8.GetString(bytes); // Todo: We need to check the encoding here..
-            var root = JObject.Parse(text);
-            var token = root.SelectToken(selector);
+            JObject? root = null;
+            try
+            {
+                root = JObject.Parse(text);
+            }
+            catch(Exception ex)
+            {
+                // Root object may be an array, wrap it in an object so we can use SelectToken on it
+                var array = JArray.Parse(text);
+                root = new JObject();
+                root.Add(new JProperty("Array", array));
+                selector = "$.Array" + selector;
+            }
+
+            if (root == null)
+            {
+                result.Error = $"json: Failed to parse json. root object is null";
+                result.IsSuccess = false;
+                return;
+            }
+
+            JToken? token;
+            try
+            {
+                token = root.SelectToken(selector);
+            }
+            catch(Exception ex)
+            {
+                result.Error = $"json: Error reading token from selector: {selector}: {ex.Message}";
+                result.IsSuccess = false;
+                return;
+            }
             if (token == null)
             {
                 if (check.Operation == VerificationOperation.NotExists)

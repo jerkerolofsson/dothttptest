@@ -12,12 +12,12 @@ namespace DotHttpTest.Runner
         private TestPlanRunnerOptions mRunnerOptions = new TestPlanRunnerOptions();
         private TestPlanBuilder mTestPlanBuilder = new TestPlanBuilder();
         private ClientOptions mClientOptions = ClientOptions.DefaultOptions();
+        private ClientOptionsBuilder mClientOptionsBuilder = new ClientOptionsBuilder();
 
         public TestPlanRunnerOptionsBuilder ConfigureClientOptions(Action<ClientOptionsBuilder> builder)
         {
-            var clientOptionsBuilder = new ClientOptionsBuilder();
-            builder(clientOptionsBuilder);
-            mClientOptions = clientOptionsBuilder.Build();
+            builder(mClientOptionsBuilder);
+            mClientOptions = mClientOptionsBuilder.Build();
             return this;
         }
 
