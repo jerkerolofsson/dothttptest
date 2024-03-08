@@ -58,7 +58,7 @@ namespace DotHttpTest.Verification
                 return;
             }
 
-            response.Results = new List<VerificationCheckResult>();
+            response.Results = new();
             foreach (var verificationCheck in response.Request.VerificationChecks)
             {
                 var result = new VerificationCheckResult(response.Request, verificationCheck);

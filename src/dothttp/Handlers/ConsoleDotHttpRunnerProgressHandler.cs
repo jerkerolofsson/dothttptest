@@ -181,8 +181,8 @@ namespace dothttp.Handlers
                 new BreakdownChart()
                     .Width(60)
                     .FullSize()
-                    .AddItem("Passed", Math.Round(testStatus.TestsPassed.Value, 1), Color.SpringGreen4)
-                    .AddItem("Failed", Math.Round(testStatus.TestsFailed.Value, 1), Color.DarkRed));
+                    .AddItem("Passed", testStatus.TestsPassed.Value, Color.SpringGreen4)
+                    .AddItem("Failed", testStatus.TestsFailed.Value, Color.DarkRed));
             panelProgress.Header = new PanelHeader("Test Passrate");
             return panelProgress;
         }
@@ -292,8 +292,52 @@ namespace dothttp.Handlers
                     );
             }
         }
-
-
+        private void AddRow(Table table, IntCounter counter)
+        {
+            if (counter.Unit == "s")
+            {
+                table.AddRow(
+                    counter.Name,
+                    FormatSeconds(counter.Value),
+                    "",
+                    "",
+                    ""
+                    );
+            }
+            else
+            {
+                table.AddRow(
+                    counter.Name,
+                    counter.Value.ToString("#.##", CultureInfo.InvariantCulture),
+                    "",
+                    "",
+                    ""
+                    );
+            }
+        }
+        private void AddRow(Table table, LongCounter counter)
+        {
+            if (counter.Unit == "s")
+            {
+                table.AddRow(
+                    counter.Name,
+                    FormatSeconds(counter.Value),
+                    "",
+                    "",
+                    ""
+                    );
+            }
+            else
+            {
+                table.AddRow(
+                    counter.Name,
+                    counter.Value.ToString("#.##", CultureInfo.InvariantCulture),
+                    "",
+                    "",
+                    ""
+                    );
+            }
+        }
         private string FormatSeconds(double seconds)
         {
             if(seconds == double.MinValue || seconds == double.MaxValue)

@@ -14,26 +14,28 @@ namespace DotHttpTest.Runner.Models
 
         public IReadOnlyList<VerificationCheckResult> FailedChecks => mFailedChecks;
 
+        public bool IsCompleted { get; set; } = false;
+
         public TestPlanStage? CurrentStage { get; internal set; }
         public TestReport TestReport { get; }
-        public Counter Iterations { get; set; } = new("iterations", "#");
+        public IntCounter Iterations { get; set; } = new("iterations", "#");
         public Trend IterationDuration { get; set; } = new("iteration_duration", "s", 1000);
         public Counter ElapsedSeconds { get; set; } = new("test_elapsed", "s");
         public Counter ProgressPercent { get; set; } = new("test_progress", "%");
         public Trend UserCount { get; set; } = new("vus", "#", 50);
         public Gauge UserMaxCount { get; set; } = new("vus_max", "#");
 
-        public Counter HttpBytesSent { get; set; } = new("http_bytes_sent", "B");
-        public Counter HttpBytesReceived{ get; set; } = new("http_bytes_recv", "B");
-        public Counter HttpRequests { get; set; } = new("http_reqs", "#");
-        public Counter HttpRequestFails { get; set; } = new("http_req_failed", "#");
+        public LongCounter HttpBytesSent { get; set; } = new("http_bytes_sent", "B");
+        public LongCounter HttpBytesReceived { get; set; } = new("http_bytes_recv", "B");
+        public LongCounter HttpRequests { get; set; } = new("http_reqs", "#");
+        public LongCounter HttpRequestFails { get; set; } = new("http_req_failed", "#");
         public Trend HttpRequestDuration { get; set; } = new("http_req_duration", "s", 5000);
         public Trend HttpRequestsPerSecond { get; set; } = new("http_reqs_per_sec", "r/s", 5000);
 
-        public Counter ChecksPassed { get; set; } = new("checks_passed", "#");
-        public Counter ChecksFailed { get; set; } = new("checks_failed", "#");
-        public Counter TestsPassed { get; set; } = new("tests_passed", "#");
-        public Counter TestsFailed { get; set; } = new("tests_failed", "#");
+        public LongCounter ChecksPassed { get; set; } = new("checks_passed", "#");
+        public LongCounter ChecksFailed { get; set; } = new("checks_failed", "#");
+        public LongCounter TestsPassed { get; set; } = new("tests_passed", "#");
+        public LongCounter TestsFailed { get; set; } = new("tests_failed", "#");
 
         public IReadOnlyDictionary<System.Net.HttpStatusCode, Counter> HttpResponseStatusCodes
         {
@@ -47,7 +49,7 @@ namespace DotHttpTest.Runner.Models
         /// <summary>
         /// The last response we processed
         /// </summary>
-        public DotHttpResponse PreviousResponse { get; internal set; }
+        public DotHttpResponse? PreviousResponse { get; internal set; }
 
         public TestStatus(TestReport testReport)
         {

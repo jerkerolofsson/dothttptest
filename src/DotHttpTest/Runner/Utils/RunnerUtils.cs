@@ -22,8 +22,12 @@ namespace DotHttpTest.Runner.Utils
             {
                 await ProcessRequestAsync(client, request, testStatus, callbacks, testStopwatch);
             }
-            testStatus.Iterations.Increment(1);
-            testStatus.IterationDuration.Log(stopwatch.Elapsed.TotalSeconds);
+
+            lock (testStatus)
+            {
+                testStatus.Iterations.Increment(1);
+                testStatus.IterationDuration.Log(stopwatch.Elapsed.TotalSeconds);
+            }
         }
         internal static async Task ProcessRequestAsync(
             DotHttpClient client,
@@ -39,18 +43,21 @@ namespace DotHttpTest.Runner.Utils
                 var response = await client.SendAsync(request, testStatus, CancellationToken.None);
 
                 // Save the last response in case there are variables that refer to it
-                testStatus.PreviousResponse = response;
-
-                // Log results and passed/failed checks
-                foreach (var check in response.Results)
+                lock (testStatus)
                 {
-                    response.Metrics.AddCheck(check);
-                    testStatus.AddResult(check);
-                }
+                    testStatus.PreviousResponse = response;
 
-                // Log response metrics
-                testStatus.ElapsedSeconds.SetValue(stopwatch.Elapsed.TotalSeconds);
-                testStatus.AddRequestMetrics(response.Metrics);
+                    // Log results and passed/failed checks
+                    foreach (var check in response.Results)
+                    {
+                        response.Metrics.AddCheck(check);
+                        testStatus.AddResult(check);
+                    }
+
+                    // Log response metrics
+                    testStatus.ElapsedSeconds.SetValue(stopwatch.Elapsed.TotalSeconds);
+                    testStatus.AddRequestMetrics(response.Metrics);
+                }
                 foreach (var callback in callbacks)
                 {
                     await callback.OnRequestCompletedAsync(response, testStatus);
@@ -65,14 +72,16 @@ namespace DotHttpTest.Runner.Utils
             catch (Exception ex)
             {
                 var check = new VerificationCheck("http_runner", "request_success", VerificationOperation.Exists, "");
-                testStatus.AddResult(new VerificationCheckResult(request, check)
+                lock (testStatus)
                 {
-                    IsSuccess = false,
-                    Error = $"Request failed: {ex.Message}"
-                });
-                testStatus.TestsFailed.Increment(1);
-                testStatus.HttpRequestFails.Increment(1);
-
+                    testStatus.AddResult(new VerificationCheckResult(request, check)
+                    {
+                        IsSuccess = false,
+                        Error = $"Request failed: {ex.Message}"
+                    });
+                    testStatus.TestsFailed.Increment(1);
+                    testStatus.HttpRequestFails.Increment(1);
+                }
                 foreach (var callback in callbacks)
                 {
                     await callback.OnRequestFailedAsync(request, ex);

@@ -11,26 +11,59 @@ namespace DotHttpTest.Runner
     {
         private readonly int mPrevTargetCount;
         private readonly StageAttributes mStage;
+        private readonly int mTotalStageCount;
+        private readonly StageWorkerPool mPool;
         private readonly Stopwatch mStopwatch;
-        private int mLoopCounter = 0;
 
-        public bool IsCompleted
+        /// <summary>
+        /// Returns true if the stage is completed.
+        /// 
+        /// Either the target duration has passed, or the number of iterations per worker has completed
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> IsCompletedAsync()
         {
-            get
+            bool isCompleted = false;
+            if (mStage.Duration != TimeSpan.Zero)
             {
-                return mStopwatch.Elapsed >= mStage.Duration;
+                if (mStopwatch.Elapsed >= mStage.Duration)
+                {
+                    isCompleted = true;
+                }
             }
+
+            if (mStage.Iterations != null)
+            {
+                // If we have no workers HasAllWorkersFinishedAsync will return true
+                // But as the number of workers is dynamic, we will only check if the target number of workers is reached
+                if (mStage.Target == await mPool.GetNumberOfActiveWorkersAsync())
+                {
+                    if (await mPool.HasAllWorkersFinishedAsync())
+                    {
+                        isCompleted = true;
+                    }
+                }
+            }
+                
+            return isCompleted;
         }
 
-        public StageOrchestrator(int prevTargetCount, StageAttributes stage)
+        public StageOrchestrator(int prevTargetCount, StageAttributes stage, int totalStageCount, StageWorkerPool pool)
         {
             mPrevTargetCount = prevTargetCount;
             mStage = stage;
+            mTotalStageCount = totalStageCount;
+            mPool = pool;
             mStopwatch = Stopwatch.StartNew();
         }
 
         public int GetWantedUserCount()
         {
+            if(mTotalStageCount == 1)
+            {
+                return mStage.Target;
+            }
+
             var from = mPrevTargetCount;
             var target = mStage.Target;
             var range = target - from;

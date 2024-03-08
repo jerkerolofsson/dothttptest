@@ -108,10 +108,7 @@ namespace DotHttpTest
                 response.ContentBytes = bytes;
             }
 
-            if (mVerifierFactory != null)
-            {
-                mVerifierFactory.Verify(response);
-            }
+            mVerifierFactory?.Verify(response);
 
             return response;
         }
@@ -136,6 +133,19 @@ namespace DotHttpTest
                 size++; // Empty line before content
             }
 
+            if (request.Content != null)
+            {
+                foreach (var header in request.Content.Headers)
+                {
+                    foreach (var val in header.Value)
+                    {
+                        size += header.Key.Length + 2; // :+space
+                        size += val.Length;
+                        size++; // \n
+                    }
+                    size++; // Empty line before content
+                }
+            }
             return size;
         }
 
@@ -155,6 +165,19 @@ namespace DotHttpTest
                     size++; // \n
                 }
                 size++; // Empty line before content
+            }
+            if (response.HttpResponse.Content != null)
+            {
+                foreach (var header in response.HttpResponse.Content.Headers)
+                {
+                    foreach (var val in header.Value)
+                    {
+                        size += header.Key.Length + 2; // :+space
+                        size += val.Length;
+                        size++; // \n
+                    }
+                    size++; // Empty line before content
+                }
             }
 
             return size;

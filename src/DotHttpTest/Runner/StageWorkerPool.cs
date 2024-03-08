@@ -18,6 +18,7 @@ namespace DotHttpTest.Runner
         private readonly CancellationToken mStoppingToken;
         private List<StageWorker> mActiveWorkers = new List<StageWorker>();
         private List<StageWorker> mIdlePool = new List<StageWorker>();
+        private TestPlanStage? mCurrentStage;
 
         public int VusMax => mActiveWorkers.Count + mIdlePool.Count;
 
@@ -64,6 +65,42 @@ namespace DotHttpTest.Runner
             }
         }
 
+        internal async Task<int> GetNumberOfActiveWorkersAsync()
+        {
+            await mSemaphore.WaitAsync();
+            try
+            {
+                return mActiveWorkers.Count;
+            }
+            finally
+            {
+                mSemaphore.Release();
+            }
+        }
+
+        public async Task<bool> HasAllWorkersFinishedAsync()
+        {
+            bool res = false;
+
+            await mSemaphore.WaitAsync();
+            try
+            {
+                foreach(var worker in mActiveWorkers)
+                {
+                    if(worker.IsStageCompleted)
+                    {
+                        res = true;
+                    }
+                }
+            }
+            finally
+            {
+                mSemaphore.Release();
+            }
+
+            return res;
+        }
+
         public async Task ResizeAsync(int capacity)
         {
             await mSemaphore.WaitAsync();
@@ -79,6 +116,11 @@ namespace DotHttpTest.Runner
 
         private void ResizePool(int capacity) 
         { 
+            if(mCurrentStage == null)
+            {
+                return;
+            }
+
             var countAdd = capacity - mActiveWorkers.Count;
             var countRemove = mActiveWorkers.Count - capacity;
 
@@ -109,7 +151,7 @@ namespace DotHttpTest.Runner
                     }
                     else
                     {
-                        worker = new StageWorker(mTestStatus, mOptions, mCallbacks, mTestStopwatch, mStoppingToken);
+                        worker = new StageWorker(mTestStatus, mOptions, mCallbacks, mCurrentStage, mTestStopwatch, mStoppingToken);
                     }
                     worker.SetRequests(mRequests);
                     worker.Start();
@@ -117,5 +159,23 @@ namespace DotHttpTest.Runner
                 }
             }
         }
+
+        internal async Task OnStageStartedAsync(TestPlanStage stage)
+        {
+            await mSemaphore.WaitAsync();
+            try
+            {
+                mCurrentStage = stage;
+                foreach(var worker in mActiveWorkers)
+                {
+                    worker.OnStageStarted(stage);
+                }
+            }
+            finally
+            {
+                mSemaphore.Release();
+            }
+        }
+
     }
 }

@@ -8,7 +8,9 @@ namespace DotHttpTest.Metrics
 {
     public class Counter : BaseMetric
     {
-        public double Value { get; protected set; } = 0;
+        private double mValue;
+
+        public double Value => mValue;
 
         public Counter(string name, string unit) : base(name, unit)
         {
@@ -16,11 +18,14 @@ namespace DotHttpTest.Metrics
 
         public void SetValue(double val)
         {
-            Value = val;
+            Interlocked.Exchange(ref mValue, val);
         }
         public void Increment(double val)
         {
-            Value += val;
+            lock (this)
+            {
+                mValue = mValue + val;
+            }
         }
     }
 }

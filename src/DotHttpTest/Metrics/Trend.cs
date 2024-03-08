@@ -14,7 +14,16 @@ namespace DotHttpTest.Metrics
         private LinkedList<double> mHistory = new LinkedList<double>();
         private List<double> mHistorySortedByValues = new List<double>();
 
-        public double Sum => mHistory.Sum();
+        public double Sum
+        {
+            get
+            {
+                lock (mHistory)
+                {
+                    return mHistory.Sum();
+                }
+            }
+        }
         public double Average
         {
             get

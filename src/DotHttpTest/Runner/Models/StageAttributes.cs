@@ -20,6 +20,13 @@ namespace DotHttpTest.Runner.Models
         public TimeSpan Duration { get; set; } = TimeSpan.Zero;
 
         /// <summary>
+        /// This is the target number of iterations before the stage stops.
+        /// This count applies for each VU
+        /// If both Duration and TargetRequestCount is set the stage will end when either of them evaluates to stop the stage
+        /// </summary>
+        public int? Iterations { get; set; }
+
+        /// <summary>
         /// Number of VUs
         /// </summary>
         public int Target { get; set; } = 1;
@@ -28,7 +35,15 @@ namespace DotHttpTest.Runner.Models
         {
             get
             {
-                return Duration > TimeSpan.Zero;
+                if(Duration > TimeSpan.Zero)
+                {
+                    return true;
+                }
+                if(Iterations != null && Iterations >= 1)
+                {
+                    return true;
+                }
+                return false;
             }
         }
     }

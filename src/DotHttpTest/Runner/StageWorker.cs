@@ -16,22 +16,28 @@ namespace DotHttpTest.Runner
         private readonly DotHttpClient mClient;
         private List<DotHttpRequest> mRequests = new();
         private readonly IReadOnlyList<ITestPlanRunnerProgressHandler> mCallbacks;
+        private TestPlanStage? mActiveStage;
+        private int mLoopCount = 0;
         private readonly Stopwatch mTestStopwatch;
         private readonly CancellationTokenSource mCancellationTokenSource;
         private readonly CancellationToken mCancellationToken;
         private readonly ManualResetEventSlim mRunEvent = new ManualResetEventSlim(true);
         private Thread? mThread;
 
+        public bool IsStageCompleted { get; set; } = false;
+
         public StageWorker(
             TestStatus testStatus, 
             ClientOptions options,
             IReadOnlyList<ITestPlanRunnerProgressHandler> callbacks,
+            TestPlanStage activeStage,
             Stopwatch testStopwatch,
             CancellationToken stoppingToken)
         {
             mTestStatus = testStatus;
             mClient = new DotHttpClient(options);
             mCallbacks = callbacks;
+            mActiveStage = activeStage;
             mTestStopwatch = testStopwatch;
             mCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
             mCancellationToken = mCancellationTokenSource.Token;
@@ -92,7 +98,18 @@ namespace DotHttpTest.Runner
         {
             while(!mCancellationToken.IsCancellationRequested)
             {
-                await RunOneIterationAsync();
+                if ((mActiveStage?.Attributes?.Iterations != null && mActiveStage.Attributes.Iterations <= mLoopCount))
+                {
+                    // Wait for next stage
+                    IsStageCompleted = true;
+                    await Task.Delay(TimeSpan.FromSeconds(0.1), mCancellationToken);
+                }
+
+                if (!IsStageCompleted)
+                {
+                    await RunOneIterationAsync();
+                    mLoopCount++;
+                }
 
                 mRunEvent.Wait(mCancellationToken);
 
@@ -114,6 +131,14 @@ namespace DotHttpTest.Runner
         {
             Stop();
             mClient.Dispose();
+        }
+
+        internal void OnStageStarted(TestPlanStage stage)
+        {
+            // A new stage has started
+            mLoopCount = 0;
+            mActiveStage = stage;
+            IsStageCompleted = false;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DotHttpTest.Verification.Models;
 using DotHttpTest.Verification.Parser;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,7 @@ namespace DotHttpTest.Models
         /// <summary>
         /// Verification checks to be performed when the response is received
         /// </summary>
-        private List<VerificationCheck> mVerificationChecks = new();
+        private ConcurrentBag<VerificationCheck> mVerificationChecks = new();
 
         /// <summary>
         /// The name of the request. This can be loaded from a comment that looks like this
@@ -61,7 +62,7 @@ namespace DotHttpTest.Models
         /// <summary>
         /// Verification checks
         /// </summary>
-        internal IReadOnlyList<VerificationCheck> VerificationChecks => mVerificationChecks.AsReadOnly();
+        internal ConcurrentBag<VerificationCheck> VerificationChecks => mVerificationChecks;
 
         /// <summary>
         /// If set to a positive value, there will be a delay after this request is sent
