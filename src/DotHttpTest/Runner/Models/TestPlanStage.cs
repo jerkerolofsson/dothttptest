@@ -22,6 +22,7 @@ namespace DotHttpTest.Runner.Models
         /// List of all requests that will be performed within this stage
         /// </summary>
         public List<DotHttpRequest> Requests { get; set; } = new();
+        public int StageIndex { get; internal set; }
 
         public TestPlanStage(StageAttributes stage)
         {

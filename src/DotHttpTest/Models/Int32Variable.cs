@@ -6,23 +6,19 @@ using System.Threading.Tasks;
 
 namespace DotHttpTest.Models
 {
-    public class Text : Expression
+    public class Int32Variable : Variable
     {
-        public string Content { get; set; }
-        public Text(string content)
-        {
+        public int? Value { get; set; }
 
-            Content = content;  
-        }
-
-        public override string ToString()
+        public override string? ToString()
         {
-            return Content;
+            return Value?.ToString();
         }
 
         public override string? ToString(TestStatus? status, StageWorkerState? stageWorkerState)
         {
-            return Content;
+            return Value?.ToString();
         }
+
     }
 }

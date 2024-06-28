@@ -14,7 +14,7 @@ namespace DotHttpTest.Converters
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public static HttpRequestMessage ToHttpRequestMessage(this DotHttpRequest request, TestStatus? status)
+        public static HttpRequestMessage ToHttpRequestMessage(this DotHttpRequest request, TestStatus? status, StageWorkerState? stageWorkerState)
         {
             ArgumentNullException.ThrowIfNull(request.Method);
             ArgumentNullException.ThrowIfNull(request.Url);
@@ -23,14 +23,14 @@ namespace DotHttpTest.Converters
             ByteArrayContent? content = null;
             if(request.Body != null)
             {
-                var bytes = request.Body.ToByteArray(Encoding.UTF8, status);
+                var bytes = request.Body.ToByteArray(Encoding.UTF8, status, stageWorkerState);
                 if (bytes.Length > 0)
                 {
                     content = new ByteArrayContent(bytes);
                 }
             }
 
-            var httpVersionNumber = request.Version.ToString(status);
+            var httpVersionNumber = request.Version.ToString(status, stageWorkerState);
             if (httpVersionNumber.StartsWith("HTTP/"))
             {
                 httpVersionNumber = httpVersionNumber[5..];
@@ -38,14 +38,14 @@ namespace DotHttpTest.Converters
 
             var httpRequestMessage = new HttpRequestMessage()
             {
-                Method = new HttpMethod(request.Method.ToString(status)),
-                RequestUri = new Uri(request.Url.ToString(status)),
+                Method = new HttpMethod(request.Method.ToString(status, stageWorkerState)),
+                RequestUri = new Uri(request.Url.ToString(status, stageWorkerState)),
                 Version = new Version(httpVersionNumber),
                 Content = content
             };
             foreach (var headerExpression in request.Headers)
             {
-                var headerLine = headerExpression.ToString(status);
+                var headerLine = headerExpression.ToString(status, stageWorkerState);
                 var p = headerLine.IndexOf(':');
                 var key = headerLine;
                 var val = "";

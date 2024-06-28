@@ -13,6 +13,28 @@ namespace DotHttpTest.Tests.Unit.ParserTests
     {
 
         [TestMethod]
+        public void ParseStage_WithCount10_IterationsSetCorrectly()
+        {
+            // Act
+            var stage = StageParser.Parse("name count:10");
+
+            // Assert
+            Assert.IsNotNull(stage.Iterations);
+            Assert.AreEqual(10, stage.Iterations.Value);
+        }
+
+        [TestMethod]
+        public void ParseStage_WithCount5_IterationsSetCorrectly()
+        {
+            // Act
+            var stage = StageParser.Parse("name count:5");
+
+            // Assert
+            Assert.IsNotNull(stage.Iterations);
+            Assert.AreEqual(5, stage.Iterations.Value);
+        }
+
+        [TestMethod]
         public void ParseStage_WithDurationInDays_DurationParsedCorrectly()
         {
             // Act

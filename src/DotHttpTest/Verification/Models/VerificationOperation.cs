@@ -11,6 +11,8 @@ namespace DotHttpTest.Verification.Models
         Exists,
         NotExists,
 
+        DateEquals,
+        DateNotEquals,
         Equals,
         NotEquals,
 

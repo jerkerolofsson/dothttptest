@@ -35,7 +35,7 @@ namespace DotHttpTest.Tests.Integration
             var request = requests.First();
 
             // Act
-            var response = await client.SendAsync(request, null);
+            var response = await client.SendAsync(request, null, null);
 
             // Assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -50,7 +50,7 @@ namespace DotHttpTest.Tests.Integration
             var request = requests.First();
 
             // Act
-            var response = await client.SendAsync(request, null);
+            var response = await client.SendAsync(request, null, null);
             var body = await response.Content.ReadAsStringAsync();
 
             // Assert
@@ -164,7 +164,7 @@ namespace DotHttpTest.Tests.Integration
             var request = requests.First();
 
             // Act
-            var response = await client.SendAsync(request, null);
+            var response = await client.SendAsync(request, null, null);
 
             // Assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);

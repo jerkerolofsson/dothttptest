@@ -21,7 +21,7 @@ namespace DotHttpTest.Providers.Json
             throw new InvalidOperationException("$json variables must be used with TestPlanRunner");
         }
 
-        public override string? ToString(TestStatus? status)
+        public override string? ToString(TestStatus? status, StageWorkerState? stageWorkerState)
         {
             // Lookup from the response
             if (status == null)

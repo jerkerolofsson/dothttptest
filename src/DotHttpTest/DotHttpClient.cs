@@ -62,10 +62,10 @@ namespace DotHttpTest
             return DotHttpRequest.FromFile(filename);
         }
 
-        public async Task<DotHttpResponse> SendAsync(DotHttpRequest request, TestStatus? status, CancellationToken cancellationToken = default)
+        public async Task<DotHttpResponse> SendAsync(DotHttpRequest request, TestStatus? status, StageWorkerState? stageWorkerState, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var httpRequestMessage = request.ToHttpRequestMessage(status);
+            var httpRequestMessage = request.ToHttpRequestMessage(status, stageWorkerState);
 
             long requestContentLength = 0;
             if(httpRequestMessage.Content?.Headers?.ContentLength != null)

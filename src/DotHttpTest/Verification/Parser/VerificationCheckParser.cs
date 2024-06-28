@@ -25,6 +25,9 @@ namespace DotHttpTest.Verification.Parser
         {
             new ("(not exists)", VerificationOperation.NotExists ),
 
+            new ("(is date)", VerificationOperation.DateEquals ),
+            new ("(is not date)", VerificationOperation.DateNotEquals ),
+
             new ("(==|\\sis\\s)", VerificationOperation.Equals ),
             new ("(!=)", VerificationOperation.NotEquals ),
             new ("(exists)", VerificationOperation.Exists ),

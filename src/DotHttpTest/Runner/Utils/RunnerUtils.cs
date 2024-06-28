@@ -13,6 +13,7 @@ namespace DotHttpTest.Runner.Utils
         internal static async Task RunOneIterationAsync(DotHttpClient client,
             IReadOnlyList<DotHttpRequest> requests,
             TestStatus testStatus,
+            StageWorkerState stageWorkerState,
             IReadOnlyList<ITestPlanRunnerProgressHandler> callbacks,
             Stopwatch testStopwatch)
         {
@@ -20,7 +21,7 @@ namespace DotHttpTest.Runner.Utils
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             foreach (var request in requests)
             {
-                await ProcessRequestAsync(client, request, testStatus, callbacks, testStopwatch);
+                await ProcessRequestAsync(client, request, testStatus, stageWorkerState, callbacks, testStopwatch);
             }
 
             lock (testStatus)
@@ -33,6 +34,7 @@ namespace DotHttpTest.Runner.Utils
             DotHttpClient client,
             DotHttpRequest request,
             TestStatus testStatus,
+            StageWorkerState stageWorkerState,
             IReadOnlyList<ITestPlanRunnerProgressHandler> callbacks,
             System.Diagnostics.Stopwatch stopwatch)
         {
@@ -40,7 +42,7 @@ namespace DotHttpTest.Runner.Utils
             {
                 // Update response with late bound variables (such as thonse from the last response)
 
-                var response = await client.SendAsync(request, testStatus, CancellationToken.None);
+                var response = await client.SendAsync(request, testStatus, stageWorkerState, CancellationToken.None);
 
                 // Save the last response in case there are variables that refer to it
                 lock (testStatus)

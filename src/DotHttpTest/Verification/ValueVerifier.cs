@@ -35,9 +35,44 @@ namespace DotHttpTest.Verification
                 case VerificationOperation.LessOrEquals:
                     return ToDouble(value.ToString()) <= ToDouble(expectedValue);
 
+                case VerificationOperation.DateEquals:
+                    {
+                        if (!DateTime.TryParse(expectedValue, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime expectedDateTime))
+                        {
+                            return false;
+                        }
+                        if (!DateTime.TryParse(value.ToString(), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime valueDateTime))
+                        {
+                            return false;
+                        }
+                        return valueDateTime.ToUniversalTime().Equals(expectedDateTime.ToUniversalTime());
+                    }
+
+                case VerificationOperation.DateNotEquals:
+                    {
+                        if (!DateTime.TryParse(expectedValue, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime expectedDateTime))
+                        {
+                            return false;
+                        }
+                        if (!DateTime.TryParse(value.ToString(), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime valueDateTime))
+                        {
+                            return false;
+                        }
+                        return !valueDateTime.ToUniversalTime().Equals(expectedDateTime.ToUniversalTime());
+                    }
+
                 case VerificationOperation.Equals:
                     if (value != null && expectedValue is not null)
                     {
+                        if (value.GetType() == typeof(double))
+                        {
+                            if (!double.TryParse(expectedValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double expectedDoubleValue))
+                            {
+                                return false;
+                            }
+                            return value.Equals(expectedDoubleValue);
+                        }
+
                         return value.ToString()!.Equals(expectedValue);
                     }
                     return false;

@@ -15,9 +15,9 @@ namespace DotHttpTest.Models
             mOther = other;
         }
 
-        public override IEnumerable<byte> ToByteArray(Encoding encoding, TestStatus? status)
+        public override IEnumerable<byte> ToByteArray(Encoding encoding, TestStatus? status, StageWorkerState? stageWorkerState)
         {
-            return mOther.ToByteArray(encoding, status);
+            return mOther.ToByteArray(encoding, status, stageWorkerState);
         }
 
         public override string? ToString()
@@ -25,9 +25,9 @@ namespace DotHttpTest.Models
             return mOther.ToString();
         }
 
-        public override string? ToString(TestStatus? status)
+        public override string? ToString(TestStatus? status, StageWorkerState? stageWorkerState)
         {
-            return mOther.ToString(status);
+            return mOther.ToString(status, stageWorkerState);
         }
     }
 }

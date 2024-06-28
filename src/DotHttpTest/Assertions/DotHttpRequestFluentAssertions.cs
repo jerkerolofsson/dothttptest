@@ -28,7 +28,7 @@ namespace DotHttpTest.Assertions
                 .ForCondition(!string.IsNullOrEmpty(name))
                 .FailWith("You can't assert that a header exists with a null value")
                 .Then
-                .Given(() => Subject.ToHttpRequestMessage(null).Headers)
+                .Given(() => Subject.ToHttpRequestMessage(null, null).Headers)
                 .ForCondition(headers => headers.Any(header => header.Key.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
                 .FailWith($"Did not find the header {name}");
 
@@ -39,7 +39,7 @@ namespace DotHttpTest.Assertions
             string mediaType, string because = "", params object[] becauseArgs)
         {
 
-            var requestMessage = Subject.ToHttpRequestMessage(null);
+            var requestMessage = Subject.ToHttpRequestMessage(null, null);
 
             var content = requestMessage.Content;
             MediaTypeHeaderValue? contentType = null;
@@ -77,7 +77,7 @@ namespace DotHttpTest.Assertions
         public AndConstraint<DotHttpRequestFluentAssertions> HaveMethod(
             HttpMethod method, string because = "", params object[] becauseArgs)
         {
-            var request = Subject.ToHttpRequestMessage(null);
+            var request = Subject.ToHttpRequestMessage(null, null);
             Execute.Assertion
                 .BecauseOf(because, becauseArgs)
                 .ForCondition(Subject.Method is not null)
@@ -117,7 +117,7 @@ namespace DotHttpTest.Assertions
                 .ForCondition(!string.IsNullOrEmpty(name))
                 .FailWith("You can't assert that a header exists with a null value")
                 .Then
-                .Given(() => Subject.ToHttpRequestMessage(null).Headers)
+                .Given(() => Subject.ToHttpRequestMessage(null, null).Headers)
                 .ForCondition(headers => 
                         headers.Any(
                             header => 

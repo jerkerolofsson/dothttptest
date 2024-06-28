@@ -15,7 +15,7 @@ namespace DotHttpTest.Providers.Random
             mLength = length;
         }
 
-        public override IEnumerable<byte> ToByteArray(Encoding encoding, TestStatus? status)
+        public override IEnumerable<byte> ToByteArray(Encoding encoding, TestStatus? status, StageWorkerState? stageWorkerState)
         {
             for (var i = 0; i < mLength; i++)
             { 
@@ -23,9 +23,9 @@ namespace DotHttpTest.Providers.Random
             }
         }
 
-        public override string? ToString(TestStatus? status)
+        public override string? ToString(TestStatus? status, StageWorkerState? stageWorkerState)
         {
-            var bytes = ToByteArray(Encoding.UTF8, status).ToArray();
+            var bytes = ToByteArray(Encoding.UTF8, status, stageWorkerState).ToArray();
             return Encoding.UTF8.GetString(bytes);
         }
     }

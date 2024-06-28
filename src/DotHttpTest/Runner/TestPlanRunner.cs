@@ -52,8 +52,10 @@ namespace DotHttpTest.Runner
             using var pool = new StageWorkerPool(testStatus, options, mTestPlanOptions.Callbacks, testStopwatch, cancellationToken);
 
             var stages = mTestPlan.Stages.ToList();
+            int stageIndex = 0;
             foreach (var stage in stages)
             {
+                stage.StageIndex = stageIndex;
                 await pool.OnStageStartedAsync(stage);
 
                 // Early abort if possible
@@ -71,6 +73,7 @@ namespace DotHttpTest.Runner
                     // Single user
                     testStatus.UserCount.Log(1);
                     testStatus.UserMaxCount.Set(1);
+                    StageWorkerState stageWorkerState = new();
 
                     foreach (var request in stage.Requests)
                     {
@@ -82,7 +85,7 @@ namespace DotHttpTest.Runner
                         testStatus.CurrentStage = basicRequestStage;
 
                         // If there is no stage, just send a single message
-                        await RunnerUtils.ProcessRequestAsync(defaultClient, request, testStatus, mTestPlanOptions.Callbacks, testStopwatch);
+                        await RunnerUtils.ProcessRequestAsync(defaultClient, request, testStatus, stageWorkerState, mTestPlanOptions.Callbacks, testStopwatch);
                     }
                 }
                 else

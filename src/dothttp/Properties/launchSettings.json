@@ -2,7 +2,7 @@
   "profiles": {
     "dothttp": {
       "commandName": "Project",
-      "commandLineArgs": "run D:\\local\\code\\Brightest\\src\\TestFramework\\BrightestGrpcService.test\\Api\\Requests\\CreateAndDestroyConnection.http"
+      "commandLineArgs": " run c:\\temp\\loop.http"
     }
   }
 }

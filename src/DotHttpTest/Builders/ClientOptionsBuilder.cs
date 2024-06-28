@@ -1,6 +1,7 @@
 ﻿using DotHttpTest.Providers;
 using DotHttpTest.Providers.Json;
 using DotHttpTest.Providers.Random;
+using DotHttpTest.Providers.State;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,7 @@ namespace DotHttpTest.Builders
         public ClientOptionsBuilder UseDefaultVariableProvider()
         {
             mVariableProviders.Insert(0, new DefaultVariableProvider());
+            mVariableProviders.Insert(0, new StateVariableProvider());
             return this;
         }
         public ClientOptionsBuilder UseJsonVariableProvider()

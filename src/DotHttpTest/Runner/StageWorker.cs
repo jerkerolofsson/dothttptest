@@ -17,12 +17,12 @@ namespace DotHttpTest.Runner
         private List<DotHttpRequest> mRequests = new();
         private readonly IReadOnlyList<ITestPlanRunnerProgressHandler> mCallbacks;
         private TestPlanStage? mActiveStage;
-        private int mLoopCount = 0;
         private readonly Stopwatch mTestStopwatch;
         private readonly CancellationTokenSource mCancellationTokenSource;
         private readonly CancellationToken mCancellationToken;
         private readonly ManualResetEventSlim mRunEvent = new ManualResetEventSlim(true);
         private Thread? mThread;
+        private StageWorkerState mState;
 
         public bool IsStageCompleted { get; set; } = false;
 
@@ -98,7 +98,7 @@ namespace DotHttpTest.Runner
         {
             while(!mCancellationToken.IsCancellationRequested)
             {
-                if ((mActiveStage?.Attributes?.Iterations != null && mActiveStage.Attributes.Iterations <= mLoopCount))
+                if ((mActiveStage?.Attributes?.Iterations != null && mActiveStage.Attributes.Iterations <= mState.LoopCount))
                 {
                     // Wait for next stage
                     IsStageCompleted = true;
@@ -108,7 +108,7 @@ namespace DotHttpTest.Runner
                 if (!IsStageCompleted)
                 {
                     await RunOneIterationAsync();
-                    mLoopCount++;
+                    mState.LoopCount++;
                 }
 
                 mRunEvent.Wait(mCancellationToken);
@@ -124,7 +124,8 @@ namespace DotHttpTest.Runner
 
         public async Task RunOneIterationAsync()
         {
-            await RunnerUtils.RunOneIterationAsync(mClient, mRequests, mTestStatus, mCallbacks, mTestStopwatch);
+            var testStatus = mTestStatus;
+            await RunnerUtils.RunOneIterationAsync(mClient, mRequests, testStatus, mState, mCallbacks, mTestStopwatch);
         }
 
         public void Dispose()
@@ -136,7 +137,7 @@ namespace DotHttpTest.Runner
         internal void OnStageStarted(TestPlanStage stage)
         {
             // A new stage has started
-            mLoopCount = 0;
+            mState.LoopCount = 0;
             mActiveStage = stage;
             IsStageCompleted = false;
         }

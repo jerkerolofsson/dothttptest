@@ -75,8 +75,11 @@ namespace dothttp.Handlers
             {
                 try
                 {
-                    var url = request.Url == null ? "" : request.Url.ToString(currentState);
-                    table.AddRow(request.RequestName ?? "", request.Method.ToString(currentState), url);
+                    var url = request.Url == null ? "" : request.Url.ToString(currentState, null);
+                    if (request.Method is not null)
+                    {
+                        table.AddRow(request.RequestName ?? "", request.Method.ToString(currentState, null), url);
+                    }
                 }
                 catch (InvalidOperationException) 
                 { 

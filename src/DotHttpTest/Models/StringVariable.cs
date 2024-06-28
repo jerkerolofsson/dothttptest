@@ -15,7 +15,7 @@ namespace DotHttpTest.Models
             return Value;
         }
 
-        public override string? ToString(TestStatus? status)
+        public override string? ToString(TestStatus? status, StageWorkerState? stageWorkerState)
         {
             return Value;
         }

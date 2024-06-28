@@ -21,7 +21,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
             dotRequest.Should().NotBeNull();
             dotRequest.Body.Should().NotBeNull();
 
-            var bytes = dotRequest.Body.ToByteArray(Encoding.UTF8, null);
+            var bytes = dotRequest.Body.ToByteArray(Encoding.UTF8, null, null);
 
             bytes.Should().NotBeEmpty();
             bytes.Length.Should().Be(5);

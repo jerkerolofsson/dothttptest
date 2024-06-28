@@ -17,21 +17,28 @@ namespace DotHttpTest.Models
             return expressions;
         }
 
-        public byte[] ToByteArray(Encoding encoding, TestStatus? status)
+        /// <summary>
+        /// This returns the expressions as a byte array.
+        /// It is invoked when creating the request
+        /// </summary>
+        /// <param name="encoding"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public byte[] ToByteArray(Encoding encoding, TestStatus? status, StageWorkerState? stageWorkerState)
         {
             var sb = new List<byte>();
             foreach (var expression in mExpressions)
             {
-                sb.AddRange(expression.ToByteArray(encoding, status));
+                sb.AddRange(expression.ToByteArray(encoding, status, stageWorkerState));
             }
             return sb.ToArray();
         }
-        public string ToString(TestStatus? status)
+        public string ToString(TestStatus? status, StageWorkerState? stageWorkerState)
         {
             var sb = new StringBuilder();
             foreach (var expression in mExpressions)
             {
-                sb.Append(expression.ToString(status));
+                sb.Append(expression.ToString(status, stageWorkerState));
             }
             return sb.ToString();
         }

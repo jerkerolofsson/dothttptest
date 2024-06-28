@@ -26,6 +26,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests
             // Assert
             Assert.AreEqual("GET http://localhost/index.html HTTP/1.1", line);
         }
+
         [TestMethod]
         public void ReplaceDataVariables_WithVariableInTheBeginning_VariableValueReplaced()
         {
