@@ -32,6 +32,11 @@ namespace DotHttpTest.Verification.Parser
             new ("(!=)", VerificationOperation.NotEquals ),
             new ("(exists)", VerificationOperation.Exists ),
 
+            // Array
+            new ("(contains)", VerificationOperation.Contains ),
+            new ("(not contains)", VerificationOperation.NotContains ),
+
+            // Value
             new ("(<=)", VerificationOperation.LessOrEquals ),
             new ("(>=)", VerificationOperation.GreaterOrEquals ),
             new ("(<)", VerificationOperation.Less ),

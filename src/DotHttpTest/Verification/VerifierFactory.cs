@@ -32,9 +32,9 @@ namespace DotHttpTest.Verification
             }
         }
 
-        internal void Verify(DotHttpResponse response)
+        internal async Task VerifyAsync(DotHttpResponse response)
         {
-            VerifyChecks(response);
+            await VerifyChecksAsync(response);
             CreateMetrics(response);
         }
 
@@ -51,7 +51,7 @@ namespace DotHttpTest.Verification
             response.Metrics.ChecksFailed.Increment(numFailed);
         }
 
-        private void VerifyChecks(DotHttpResponse response)
+        private async Task VerifyChecksAsync(DotHttpResponse response)
         {
             if (response.Request == null)
             {
@@ -67,7 +67,7 @@ namespace DotHttpTest.Verification
                 {
                     if (verifier != null)
                     {
-                        verifier.Verify(response, result);
+                        await verifier.VerifyAsync(response, result);
                     }
                 }
                 else

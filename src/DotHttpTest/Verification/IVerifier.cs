@@ -8,6 +8,6 @@ namespace DotHttpTest.Verification
 {
     public interface IVerifier
     {
-        void Verify(DotHttpResponse response, VerificationCheckResult result);
+        Task VerifyAsync(DotHttpResponse response, VerificationCheckResult result);
     }
 }

@@ -12,29 +12,17 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageTags>http;.http;dothttp;apitest</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Version>2.0.5</Version>
+		<Version>2.0.1</Version>
 		<PackageProjectUrl>https://github.com/jerkerolofsson/dothttptest</PackageProjectUrl>
 		<PackageIcon>icon.png</PackageIcon>
 	</PropertyGroup>
+
 	<ItemGroup>
-		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-			<_Parameter1>DotHttpTest.Tests.Unit</_Parameter1>
-		</AssemblyAttribute>
-	</ItemGroup>
-	<ItemGroup>
-		<None Include="..\..\data\icon.png">
-		  <Pack>True</Pack>
-		  <PackagePath>\</PackagePath>
-		</None>
-		<None Include="..\..\README.md">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="FluentAssertions" Version="6.11.0" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-	</ItemGroup>
+    <PackageReference Include="Jint" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DotHttpTest\DotHttpTest.csproj" />
+  </ItemGroup>
 
 </Project>

@@ -11,6 +11,24 @@ namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
     public class BodyTests
     {
         [TestMethod]
+        public void DotHttpRequestLoader_WithVariableInBody_BodyContainsVariableName()
+        {
+            // Arrange
+            // Act
+            var dotRequest = DotHttpRequestLoader.ParseRequest(File.ReadAllLines("TestData/Requests/Post/post_with_variable_in_content.http"));
+
+            // Assert
+            dotRequest.Should().NotBeNull();
+            dotRequest.Body.Should().NotBeNull();
+
+            var bytes = dotRequest.Body.ToByteArray(Encoding.UTF8, null, null);
+            var text = Encoding.UTF8.GetString(bytes);
+
+            text.Should().NotContain("{{name}}");
+        }
+
+
+        [TestMethod]
         public void DotHttpRequestLoader_WithBody_BodyBytesAreRead()
         {
             // Arrange

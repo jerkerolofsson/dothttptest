@@ -15,7 +15,15 @@ namespace DotHttpTest.Models
         /// </summary>
         public bool IgnoreMissingVariables { get; set; } = false;
 
+        /// <summary>
+        /// Variable providers used
+        /// </summary>
         public IReadOnlyList<IVariableProvider>? VariableProviders { get; internal set; }
+
+        /// <summary>
+        /// Verifiers used
+        /// </summary>
+        public IReadOnlyList<IVerifier>? Verifiers { get; internal set; }
 
         public RequestOptions Request { get; set; } = new();
 
@@ -38,6 +46,9 @@ namespace DotHttpTest.Models
         public static ClientOptions DefaultOptions()
         {
             return new ClientOptionsBuilder()
+                .ClearVariableProviders()
+                .UseHttpVerifier()
+                .UseJsonVerifier()
                 .ClearVariableProviders()
                 .UseDefaultVariableProvider()
                 .UseDynamicVariableProvider()

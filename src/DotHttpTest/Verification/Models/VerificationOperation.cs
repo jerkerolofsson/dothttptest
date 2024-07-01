@@ -21,6 +21,10 @@ namespace DotHttpTest.Verification.Models
         Less,
         Greater,
 
-        RegexMatch
+        RegexMatch,
+
+        // Array
+        Contains,
+        NotContains,
     }
 }

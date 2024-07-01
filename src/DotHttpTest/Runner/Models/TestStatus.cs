@@ -47,10 +47,14 @@ namespace DotHttpTest.Runner.Models
         private ConcurrentDictionary<System.Net.HttpStatusCode, Counter> mHttpResponseStatusCodes { get; set; } = new();
 
         /// <summary>
-        /// The last response we processed
+        /// The last processed response 
         /// </summary>
-        public DotHttpResponse? PreviousResponse { get; internal set; }
+        public DotHttpResponseDto? PreviousResponse { get; set; }
 
+        /// <summary>
+        /// The last processed request
+        /// </summary>
+        public DotHttpRequestDto? PreviousRequest { get; set; }
         public TestStatus(TestReport testReport)
         {
             TestReport = testReport;

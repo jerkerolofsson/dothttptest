@@ -10,7 +10,7 @@ namespace DotHttpTest.Verification.Json
     [ResponseVerifier("json")]
     internal class JsonVerifier : ValueVerifier, IVerifier
     {
-        public void Verify(DotHttpResponse response, VerificationCheckResult result)
+        public Task VerifyAsync(DotHttpResponse response, VerificationCheckResult result)
         {
             var check = result.Check;
             var selector = check.PropertyId;
@@ -20,7 +20,7 @@ namespace DotHttpTest.Verification.Json
             {
                 result.Error = "json: Response body is empty";
                 result.IsSuccess = false;
-                return;
+                return Task.CompletedTask;
             }
             var text = Encoding.UTF8.GetString(bytes); // Todo: We need to check the encoding here..
             JObject? root = null;
@@ -34,14 +34,22 @@ namespace DotHttpTest.Verification.Json
                 var array = JArray.Parse(text);
                 root = new JObject();
                 root.Add(new JProperty("Array", array));
-                selector = "$.Array" + selector;
+
+                if (selector == ".")
+                {
+                    selector = "$.Array";
+                }
+                else 
+                {
+                    selector = "$.Array" + selector;
+                }
             }
 
             if (root == null)
             {
                 result.Error = $"json: Failed to parse json. root object is null";
                 result.IsSuccess = false;
-                return;
+                return Task.CompletedTask;
             }
 
             JToken? token;
@@ -53,29 +61,39 @@ namespace DotHttpTest.Verification.Json
             {
                 result.Error = $"json: Error reading token from selector: {selector}: {ex.Message}";
                 result.IsSuccess = false;
-                return;
+                return Task.CompletedTask;
             }
             if (token == null)
             {
                 if (check.Operation == VerificationOperation.NotExists)
                 {
                     result.IsSuccess = true;
-                    return;
+                    return Task.CompletedTask;
                 }
 
                 result.Error = $"json: Not found: {selector}";
                 result.IsSuccess = false;
-                return;
+                return Task.CompletedTask;
             }
             result.ActualValue = token.ToString();
-            if (!CompareValue(result.ActualValue, check.ExpectedValue, check.Operation))
+            try
             {
-                result.Error = $"json: Expected: {check.ExpectedValue} but got {token.ToString()}";
+                if (!CompareValue(token, result.ActualValue, check.ExpectedValue, check.Operation))
+                {
+                    result.Error = $"json: Expected: {check.ExpectedValue} but got {token.ToString()}";
+                    result.IsSuccess = false;
+                    return Task.CompletedTask;
+                }
+            }
+            catch(Exception ex)
+            {
+                result.Error = $"json: {ex.Message}";
                 result.IsSuccess = false;
-                return;
+                return Task.CompletedTask;
             }
             result.IsSuccess = true;
             result.Error = null;
+            return Task.CompletedTask;
         }
     }
 }

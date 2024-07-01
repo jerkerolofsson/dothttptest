@@ -38,6 +38,15 @@ namespace DotHttpTest.Runner
                 testStatusCreatedCallback(testStatus);
             }
 
+            // Initialize variable providers
+            if (mTestPlanOptions.ClientOptions?.VariableProviders is not null)
+            {
+                foreach (var variableProvider in mTestPlanOptions.ClientOptions.VariableProviders)
+                {
+                    await variableProvider.InitAsync();
+                }
+            }
+
             using var defaultClient = new DotHttpClient(options);
             var currentClientCount = 0;
             var testStopwatch = Stopwatch.StartNew();

@@ -11,7 +11,7 @@ namespace DotHttpTest.Verification.Http
     [ResponseVerifier("http")]
     public class HttpVerifier : ValueVerifier, IVerifier
     {
-        public void Verify(DotHttpResponse response, VerificationCheckResult result)
+        public Task VerifyAsync(DotHttpResponse response, VerificationCheckResult result)
         {
             var check = result.Check;
             switch(check.PropertyId)
@@ -29,13 +29,14 @@ namespace DotHttpTest.Verification.Http
                 default:
                     result.IsSuccess = false;
                     result.Error = $"Unknown property: {result.Check.PropertyId}";
-                    return;
+                    return Task.CompletedTask; 
             }
 
             if(!result.IsSuccess && result.Error == null)
             {
                 result.Error = $"{result.Check.VerifierId} {result.Check.PropertyId} was {result.ActualValue}, expected {result.Check.Operation} {result.Check.ExpectedValue ?? ""} for {result.Request.RequestName} {response.RequestUri}";
             }
+            return Task.CompletedTask;
         }
     }
 }

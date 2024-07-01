@@ -8,5 +8,9 @@ namespace DotHttpTest.Models
 {
     public abstract class Variable : Expression
     {
+        public override string? ToString()
+        {
+            return base.ToString();
+        }
     }
 }

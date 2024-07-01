@@ -66,6 +66,11 @@ namespace DotHttpTest
         {
             cancellationToken.ThrowIfCancellationRequested();
             var httpRequestMessage = request.ToHttpRequestMessage(status, stageWorkerState);
+            if (status is not null)
+            {
+                status.PreviousRequest = httpRequestMessage.ToDto();
+                status.PreviousRequest.ContentBytes = request.ContentBytes;
+            }
 
             long requestContentLength = 0;
             if(httpRequestMessage.Content?.Headers?.ContentLength != null)
@@ -80,11 +85,19 @@ namespace DotHttpTest
                 Created = DateTime.UtcNow,
                 Request = request
             };
-            var stopwatch = Stopwatch.StartNew();
 
             // Send the request
+            var stopwatch = Stopwatch.StartNew();
             var httpResponse = await mClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
             var sendingElapsed = stopwatch.Elapsed.TotalSeconds;
+
+            // Save message
+            if (status is not null)
+            {
+                status.PreviousResponse = httpResponse.ToDto();
+            }
+
+            // Update metrics
             metrics.HttpRequestSending.SetValue(sendingElapsed);
             metrics.StatusCode = httpResponse.StatusCode;
 
@@ -106,10 +119,16 @@ namespace DotHttpTest
                 metrics.HttpRequestDuration.SetValue(elapsed);
 
                 response.ContentBytes = bytes;
+                if (status?.PreviousResponse is not null)
+                {
+                    status.PreviousResponse.ContentBytes = bytes;
+                }
+
             }
-
-            mVerifierFactory?.Verify(response);
-
+            if (mVerifierFactory is not null)
+            {
+                await mVerifierFactory.VerifyAsync(response);
+            }
             return response;
         }
 

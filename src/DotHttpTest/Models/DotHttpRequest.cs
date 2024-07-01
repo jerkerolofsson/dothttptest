@@ -73,6 +73,7 @@ namespace DotHttpTest.Models
         public ExpressionList? Body { get; internal set; } = null;
 
         public bool HasUrl { get; internal set; }
+        public byte[]? ContentBytes { get; internal set; }
 
         public string GetBodyAsText()
         {

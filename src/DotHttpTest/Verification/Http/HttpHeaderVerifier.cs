@@ -9,7 +9,7 @@ namespace DotHttpTest.Verification.Http
     [ResponseVerifier("header")]
     public class HttpHeaderVerifier : ValueVerifier, IVerifier
     {
-        public void Verify(DotHttpResponse response, VerificationCheckResult result)
+        public Task VerifyAsync(DotHttpResponse response, VerificationCheckResult result)
         {
             var check = result.Check;
             string headerName = check.PropertyId;
@@ -20,7 +20,7 @@ namespace DotHttpTest.Verification.Http
                 if(check.Operation == VerificationOperation.NotExists)
                 {
                     result.IsSuccess = true;
-                    return;
+                    return Task.CompletedTask;
                 }
 
                 result.Error = $"HTTP Header '{headerName}' was not found";
@@ -48,8 +48,8 @@ namespace DotHttpTest.Verification.Http
                 {
                     result.Error = $"{result.Check.VerifierId} {result.Check.PropertyId} was {result.ActualValue}, expected {result.Check.Operation} {result.Check.ExpectedValue ?? ""} for {result.Request.RequestName} ({result.Request.Url})";
                 }
-
             }
+            return Task.CompletedTask;
         }
     }
 }

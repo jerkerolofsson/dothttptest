@@ -2,33 +2,64 @@
 using DotHttpTest.Providers.Json;
 using DotHttpTest.Providers.Random;
 using DotHttpTest.Providers.State;
+using DotHttpTest.Verification.Http;
+using DotHttpTest.Verification.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 
 namespace DotHttpTest.Builders
 {
     public class ClientOptionsBuilder
     {
         private readonly List<IVariableProvider> mVariableProviders = new List<IVariableProvider>();
+        private readonly List<IVerifier> mVerifiers = new List<IVerifier>();
         private VariableCollection? mVariableCollection = null;
         internal ClientOptions mOptions = new ClientOptions();
 
         public ClientOptionsBuilder()
         {
+            UseJsonVerifier();
+            UseHttpVerifier();
         }
 
         public ClientOptions Build()
         {
             mOptions.VariableProviders = mVariableProviders.ToList();
+            mOptions.Verifiers = mVerifiers.ToList();
             return mOptions;
         }
 
         public ClientOptionsBuilder WithHttpClientFactory(Func<HttpClient> factory)
         {
             mOptions.HttpClientFactory = factory;
+            return this;
+        }
+
+        public ClientOptionsBuilder ClearVerifiers()
+        {
+            mVerifiers.Clear();
+            return this;
+        }
+        public ClientOptionsBuilder WithVerifiers(IVerifier verifier)
+        {
+            mVerifiers.Add(verifier);
+            return this;
+        }
+
+        public ClientOptionsBuilder UseJsonVerifier()
+        {
+            mVerifiers.Add(new JsonVerifier());
+            return this;
+        }
+
+        public ClientOptionsBuilder UseHttpVerifier()
+        {
+            mVerifiers.Add(new HttpVerifier());
+            mVerifiers.Add(new HttpHeaderVerifier());
             return this;
         }
 
@@ -43,6 +74,13 @@ namespace DotHttpTest.Builders
             mVariableProviders.Insert(0, new StateVariableProvider());
             return this;
         }
+
+        public ClientOptionsBuilder WithVariableProvider(IVariableProvider provider)
+        {
+            mVariableProviders.Insert(0, provider);
+            return this;
+        }
+
         public ClientOptionsBuilder UseJsonVariableProvider()
         {
             mVariableProviders.Insert(0, new JsonVariableProvider());

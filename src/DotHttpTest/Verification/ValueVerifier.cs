@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace DotHttpTest.Verification
 {
     public class ValueVerifier
     {
-        protected bool CompareValue(object value, string? expectedValue, VerificationOperation operation)
+        protected bool CompareValue(JToken token, object? value, string? expectedValue, VerificationOperation operation)
         {
             if (value is null)
             {
@@ -20,12 +21,58 @@ namespace DotHttpTest.Verification
 
                 return false;
             }
+            if (operation == VerificationOperation.Exists)
+            {
+                return true;
+            }
 
+            if (token is JArray arr)
+            {
+                switch (operation)
+                {
+                    case VerificationOperation.Contains:
+                        foreach (var arrayValue in arr.Values())
+                        {
+                            if (arrayValue.ToString() == expectedValue)
+                            {
+                                return true;
+                            }
+                        }
+                        return false;
+                    case VerificationOperation.NotContains:
+                        foreach (var arrayValue in arr.Values())
+                        {
+                            if (arrayValue.ToString() == expectedValue)
+                            {
+                                return false;
+                            }
+                        }
+                        return true;
+
+                    default:
+                        throw new Exception($"Operation '{operation}' cannot be used on an array");
+                }
+            }
+            return CompareValue(value, expectedValue, operation);
+        }
+
+        protected bool CompareValue(object? value, string? expectedValue, VerificationOperation operation)
+        {
+            if (value is null)
+            {
+                if (operation == VerificationOperation.NotExists)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            if (operation == VerificationOperation.Exists)
+            {
+                return true;
+            }
             switch (operation)
             {
-                case VerificationOperation.Exists:
-                    return true;
-
                 case VerificationOperation.Greater:
                     return ToDouble(value.ToString()) > ToDouble(expectedValue);
                 case VerificationOperation.GreaterOrEquals:
@@ -82,6 +129,20 @@ namespace DotHttpTest.Verification
                         return !value.ToString()!.Equals(expectedValue);
                     }
                     return false;
+
+                case VerificationOperation.Contains:
+                    if (value != null && expectedValue is not null)
+                    {
+                        return value.ToString()!.Contains(expectedValue);
+                    }
+                    return false;
+                case VerificationOperation.NotContains:
+                    if (value != null && expectedValue is not null)
+                    {
+                        return !value.ToString()!.Contains(expectedValue);
+                    }
+                    return false;
+
                 default:
                     //throw new Exception($"Unknown operation: {operation}");
                     return false;

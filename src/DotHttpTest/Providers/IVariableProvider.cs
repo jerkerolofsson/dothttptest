@@ -11,6 +11,7 @@ namespace DotHttpTest.Providers
     /// </summary>
     public interface IVariableProvider
     {
+        Task InitAsync() => Task.CompletedTask;
         Variable? GetVariableValue(string variableName);
     }
 }

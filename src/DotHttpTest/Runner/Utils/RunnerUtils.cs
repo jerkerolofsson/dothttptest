@@ -47,8 +47,6 @@ namespace DotHttpTest.Runner.Utils
                 // Save the last response in case there are variables that refer to it
                 lock (testStatus)
                 {
-                    testStatus.PreviousResponse = response;
-
                     // Log results and passed/failed checks
                     foreach (var check in response.Results)
                     {

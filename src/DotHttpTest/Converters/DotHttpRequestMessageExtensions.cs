@@ -26,7 +26,10 @@ namespace DotHttpTest.Converters
                 var bytes = request.Body.ToByteArray(Encoding.UTF8, status, stageWorkerState);
                 if (bytes.Length > 0)
                 {
+                    // Save the generated content
+                    request.ContentBytes = bytes;
                     content = new ByteArrayContent(bytes);
+                    content.Headers.ContentLength = bytes.Length;
                 }
             }
 
