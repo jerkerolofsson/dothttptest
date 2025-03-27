@@ -12,12 +12,12 @@ namespace DotHttpTest.Runner
         private TestPlanRunnerOptions mRunnerOptions = new TestPlanRunnerOptions();
         private TestPlanBuilder mTestPlanBuilder = new TestPlanBuilder();
         private ClientOptions mClientOptions = ClientOptions.DefaultOptions();
+        private ClientOptionsBuilder mClientOptionsBuilder = new ClientOptionsBuilder();
 
         public TestPlanRunnerOptionsBuilder ConfigureClientOptions(Action<ClientOptionsBuilder> builder)
         {
-            var clientOptionsBuilder = new ClientOptionsBuilder();
-            builder(clientOptionsBuilder);
-            mClientOptions = clientOptionsBuilder.Build();
+            builder(mClientOptionsBuilder);
+            mClientOptions = mClientOptionsBuilder.Build();
             return this;
         }
 
@@ -31,6 +31,18 @@ namespace DotHttpTest.Runner
         {
             return ConfigureTestPlan((builder, options) => {
                 builder.LoadHttpFile(httpFilePath, options);
+            });
+        }
+        /// <summary>
+        /// Loads all requests and stages from the .http file, configuring each request with the builder
+        /// </summary>
+        /// <param name="httpFilePath"></param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public TestPlanRunnerOptionsBuilder LoadHttpFile(string httpFilePath, Action<DotHttpRequestBuilder> requestBuilder)
+        {
+            return ConfigureTestPlan((builder, options) => {
+                builder.LoadHttpFile(httpFilePath, requestBuilder, options);
             });
         }
         public TestPlanRunnerOptionsBuilder ConfigureTestPlan(Action<TestPlanBuilder, ClientOptions> testPlanConfigurator)

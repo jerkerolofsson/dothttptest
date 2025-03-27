@@ -24,25 +24,38 @@ namespace DotHttpTest.Runner
         }
 
         public async Task<TestStatus> RunAsync(CancellationToken cancellationToken = default)
-        { 
+        {
+            return await RunAsync(null, cancellationToken);
+        }
+
+        public async Task<TestStatus> RunAsync(Action<TestStatus>? testStatusCreatedCallback, CancellationToken cancellationToken = default)
+        {
             var testReport = new TestReport(mTestPlan);
             var testStatus = new TestStatus(testReport);
             var options = mTestPlanOptions.ClientOptions;
+            if(testStatusCreatedCallback != null)
+            {
+                testStatusCreatedCallback(testStatus);
+            }
 
             using var defaultClient = new DotHttpClient(options);
             var currentClientCount = 0;
-            var stopwatch = Stopwatch.StartNew();
+            var testStopwatch = Stopwatch.StartNew();
+
+            //Thread.Sleep(8000);
 
             // Initial metrics
             testStatus.UserCount.Log(0);
             testStatus.UserMaxCount.Set(0);
 
             // Thread pool for all stages for this request
-            using var pool = new StageWorkerPool(testStatus, options, mTestPlanOptions.Callbacks, cancellationToken);
+            using var pool = new StageWorkerPool(testStatus, options, mTestPlanOptions.Callbacks, testStopwatch, cancellationToken);
 
             var stages = mTestPlan.Stages.ToList();
             foreach (var stage in stages)
             {
+                await pool.OnStageStartedAsync(stage);
+
                 // Early abort if possible
                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -53,8 +66,12 @@ namespace DotHttpTest.Runner
                     await callback.OnStageStartedAsync(stage, testStatus);
                 }
 
-                if (stage.Attributes.Duration == TimeSpan.Zero)
+                if (!stage.Attributes.HasDurationOrLoopAttributes)
                 {
+                    // Single user
+                    testStatus.UserCount.Log(1);
+                    testStatus.UserMaxCount.Set(1);
+
                     foreach (var request in stage.Requests)
                     {
                         var basicRequestStage = new TestPlanStage(new StageAttributes()
@@ -65,25 +82,27 @@ namespace DotHttpTest.Runner
                         testStatus.CurrentStage = basicRequestStage;
 
                         // If there is no stage, just send a single message
-                        await RunnerUtils.ProcessRequestAsync(defaultClient, request, testStatus, mTestPlanOptions.Callbacks);
+                        await RunnerUtils.ProcessRequestAsync(defaultClient, request, testStatus, mTestPlanOptions.Callbacks, testStopwatch);
                     }
                 }
                 else
                 {
                     await pool.SetRequestsAsync(stage.Requests);
 
-                    var orchestrator = new StageOrchestrator(currentClientCount, stage.Attributes);
-                    while (!orchestrator.IsCompleted && !cancellationToken.IsCancellationRequested)
+                    var orchestrator = new StageOrchestrator(currentClientCount, stage.Attributes, stages.Count, pool);
+                    while (!await orchestrator.IsCompletedAsync() && !cancellationToken.IsCancellationRequested)
                     {
                         // Refresh the user count at the current time
                         var targetUserCount = orchestrator.GetWantedUserCount();
 
-                        // Change the size of the pool
+                        // Change the size of the pool of VUs
+                        // The number of VUs will linearly scale between stages.
+                        // If only a single stage is set, the VU count will be the target count for the whole stage.
                         await pool.ResizeAsync(targetUserCount);
 
                         // Resize the worker pool size for the current number of users
                         currentClientCount = targetUserCount;
-                        testStatus.ElapsedSeconds.SetValue(stopwatch.Elapsed.TotalSeconds);
+                        testStatus.ElapsedSeconds.SetValue(testStopwatch.Elapsed.TotalSeconds);
                         UpdateProgress(testStatus);
 
                         testStatus.UserCount.Log(currentClientCount);
@@ -93,7 +112,8 @@ namespace DotHttpTest.Runner
                         await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
                     }
                 }
-
+                testStatus.ElapsedSeconds.SetValue(testStopwatch.Elapsed.TotalSeconds);
+                UpdateProgress(testStatus);
                 testStatus.CurrentStage = null;
                 foreach (var callback in mTestPlanOptions.Callbacks)
                 {
@@ -103,11 +123,13 @@ namespace DotHttpTest.Runner
             }
 
             // Final elapsed timestamp
-            testStatus.ElapsedSeconds.SetValue(stopwatch.Elapsed.TotalSeconds);
+            testStatus.ElapsedSeconds.SetValue(testStopwatch.Elapsed.TotalSeconds);
             foreach (var callback in mTestPlanOptions.Callbacks)
             {
                 await callback.OnTestCompletedAsync(testStatus);
             }
+
+            testStatus.IsCompleted = true;
 
             return testStatus;
         }
@@ -122,6 +144,10 @@ namespace DotHttpTest.Runner
                     progress = 1;
                 }
                 testStatus.ProgressPercent.SetValue(100 * progress);
+            }
+            else
+            {
+                testStatus.ProgressPercent.SetValue(100);
             }
         }
     }

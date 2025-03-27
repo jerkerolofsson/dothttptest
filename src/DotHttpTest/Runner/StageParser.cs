@@ -88,6 +88,15 @@ namespace DotHttpTest.Runner
                         throw new HttpParsingException($"Error parsing property 'duration'. For one-shot requests remove the duration property.");
                     }
                     break;
+
+                case "count":
+                    if (!int.TryParse(pair[1], out var requestCount))
+                    {
+                        throw new HttpParsingException($"Invalid property '{pair[1]}' - expected integer value for property 'count'");
+                    }
+                    stage.Iterations = requestCount;
+                    break;
+
                 case "target":
                     if (!int.TryParse(pair[1], out var target))
                     {

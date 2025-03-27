@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +19,12 @@ namespace DotHttpTest.Verification.Http
                 case "status-code":
                     result.ActualValue = ((int)response.StatusCode).ToString();
                     result.IsSuccess = CompareValue((int)response.StatusCode, check.ExpectedValue, check.Operation);
+                    break;
+                case "duration":
+                    double duration = response.Metrics.HttpRequestDuration.Value;
+                    var millis = (int)(Math.Round(duration * 1000));
+                    result.ActualValue = millis.ToString();
+                    result.IsSuccess = CompareValue(millis, check.ExpectedValue, check.Operation);
                     break;
                 default:
                     result.IsSuccess = false;

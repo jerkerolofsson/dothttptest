@@ -67,6 +67,12 @@ namespace DotHttpTest
             cancellationToken.ThrowIfCancellationRequested();
             var httpRequestMessage = request.ToHttpRequestMessage(status);
 
+            long requestContentLength = 0;
+            if(httpRequestMessage.Content?.Headers?.ContentLength != null)
+            {
+                requestContentLength = httpRequestMessage.Content.Headers.ContentLength.Value;
+            }
+
             // Create new HTTP metrics
             var metrics = new HttpRequestMetrics()
             {
@@ -85,22 +91,96 @@ namespace DotHttpTest
             var response = new DotHttpResponse(httpResponse, metrics);
             response.RequestUri = httpRequestMessage.RequestUri;
             response.Request = request;
+            metrics.HttpBytesSent.Increment(EstimateHttpProtocolByteLength(httpRequestMessage));
+            metrics.HttpBytesSent.Increment(requestContentLength);
+
+            // Estimate the header byte size
+            metrics.HttpBytesReceived.Increment(EstimateHttpProtocolByteLength(response));
             if (mOptions.Request.ReadContent)
             {
                 var bytes = await httpResponse.Content.ReadAsByteArrayAsync();
                 var elapsed = stopwatch.Elapsed.TotalSeconds;
+                metrics.HttpBytesReceived.Increment(bytes.LongLength);
 
                 metrics.HttpRequestReceiving.SetValue(elapsed - sendingElapsed);
                 metrics.HttpRequestDuration.SetValue(elapsed);
+
                 response.ContentBytes = bytes;
             }
 
-            if (mVerifierFactory != null)
-            {
-                mVerifierFactory.Verify(response);
-            }
+            mVerifierFactory?.Verify(response);
 
             return response;
+        }
+
+        private long EstimateHttpProtocolByteLength(HttpRequestMessage request)
+        {
+            long size = 0;
+            size += request.Method.Method.Length + 1;
+            if (request.RequestUri != null)
+            {
+                size += request.RequestUri.ToString().Length + 1;
+            }
+            size += 8; // HTTP/1.1 
+            foreach (var header in request.Headers)
+            {
+                foreach (var val in header.Value)
+                {
+                    size += header.Key.Length + 2; // :+space
+                    size += val.Length;
+                    size++; // \n
+                }
+                size++; // Empty line before content
+            }
+
+            if (request.Content != null)
+            {
+                foreach (var header in request.Content.Headers)
+                {
+                    foreach (var val in header.Value)
+                    {
+                        size += header.Key.Length + 2; // :+space
+                        size += val.Length;
+                        size++; // \n
+                    }
+                    size++; // Empty line before content
+                }
+            }
+            return size;
+        }
+
+        private long EstimateHttpProtocolByteLength(DotHttpResponse response)
+        {
+            long size = 0;
+            size += 9; // HTTP1.1 + space
+            size += 4; // Response code + space
+            size += response.ReasonPhrase?.Length ?? 0;
+            size++; // \n
+            foreach (var header in response.HttpResponse.Headers)
+            {
+                foreach (var val in header.Value)
+                {
+                    size += header.Key.Length + 2; // :+space
+                    size += val.Length;
+                    size++; // \n
+                }
+                size++; // Empty line before content
+            }
+            if (response.HttpResponse.Content != null)
+            {
+                foreach (var header in response.HttpResponse.Content.Headers)
+                {
+                    foreach (var val in header.Value)
+                    {
+                        size += header.Key.Length + 2; // :+space
+                        size += val.Length;
+                        size++; // \n
+                    }
+                    size++; // Empty line before content
+                }
+            }
+
+            return size;
         }
 
         public void Dispose()

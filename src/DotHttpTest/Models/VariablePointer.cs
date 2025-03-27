@@ -15,6 +15,11 @@ namespace DotHttpTest.Models
             mOther = other;
         }
 
+        public override IEnumerable<byte> ToByteArray(Encoding encoding, TestStatus? status)
+        {
+            return mOther.ToByteArray(encoding, status);
+        }
+
         public override string? ToString()
         {
             return mOther.ToString();

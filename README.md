@@ -54,6 +54,24 @@ GET http://localhost/get HTTP/1.1
 GET http://localhost/get HTTP/1.1
 ```
 
+#### Verify a JSON property 
+```http
+# @verify json PropertyName == Value
+GET http://localhost/get HTTP/1.1
+```
+
+#### Use a JSON property in the next request
+```http
+GET http://localhost/get HTTP/1.1
+
+PATCH http://localhost/post/{{$json.PropertyName}}
+
+{
+	"UpdatedField": "123"
+}
+```
+
+
 ## Usage
 
 ### CLI Example Usage

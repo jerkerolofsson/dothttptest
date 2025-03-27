@@ -1,6 +1,7 @@
 ﻿using DotHttpTest.Verification.Models;
 using DotHttpTest.Verification.Parser;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,7 @@ namespace DotHttpTest.Models
         /// <summary>
         /// Verification checks to be performed when the response is received
         /// </summary>
-        private List<VerificationCheck> mVerificationChecks = new();
+        private ConcurrentBag<VerificationCheck> mVerificationChecks = new();
 
         /// <summary>
         /// The name of the request. This can be loaded from a comment that looks like this
@@ -57,7 +58,11 @@ namespace DotHttpTest.Models
         /// Returns all stages
         /// </summary>
         public IReadOnlyList<StageAttributes> Stages => mStages.AsReadOnly();
-        internal IReadOnlyList<VerificationCheck> VerificationChecks => mVerificationChecks.AsReadOnly();
+
+        /// <summary>
+        /// Verification checks
+        /// </summary>
+        internal ConcurrentBag<VerificationCheck> VerificationChecks => mVerificationChecks;
 
         /// <summary>
         /// If set to a positive value, there will be a delay after this request is sent
@@ -90,6 +95,20 @@ namespace DotHttpTest.Models
         internal void SetMeta(string metaValue)
         {
             mMetadata[metaValue] = null;
+        }
+
+        /// <summary>
+        /// Returns all metadata for the request.
+        /// This includes all comments that looks like this:
+        /// # @someKey someValue
+        /// or
+        /// # @someKey
+        /// </summary>
+        /// <returns></returns>
+        public IDictionary<string,string?> GetMetadata()
+        {
+            mMetadata ??= new();
+            return mMetadata;
         }
 
         /// <summary>
@@ -129,15 +148,44 @@ namespace DotHttpTest.Models
             }
         }
 
-        private void AddStage(string val)
+        internal void AddStage(StageAttributes stage)
         {
-            mStages.Add(StageParser.Parse(val));
+            mStages.Add(stage);
         }
-        private void AddVerificationCheck(string val)
+
+        internal void AddStage(string val)
+        {
+            AddStage(StageParser.Parse(val));
+        }
+
+        internal void ClearStages()
+        {
+            mStages.Clear();
+        }
+
+        internal void AddVerificationCheck(string val)
         {
             mVerificationChecks.Add(VerificationCheckParser.Parse(val));
         }
 
+        public static List<DotHttpRequest> Parse(string httpFileContents, ClientOptions? options = null)
+        {
+            var request = DotHttpRequestLoader.ParseRequests(httpFileContents.Split('\n'), options);
+            return request;
+        }
+
+        public static List<DotHttpRequest> Parse(string[] httpFileLines, ClientOptions? options = null)
+        {
+            var request = DotHttpRequestLoader.ParseRequests(httpFileLines, options);
+            return request;
+        }
+
+        public static List<DotHttpRequest> FromStream(Stream stream, ClientOptions? options = null)
+        {
+            using var reader = new StreamReader(stream, leaveOpen: true);
+            var request = DotHttpRequestLoader.ParseRequests(reader.ReadToEnd().Split('\n'), options);
+            return request;
+        }
         public static List<DotHttpRequest> FromFile(string httpFilePath, ClientOptions? options = null)
         {
             var request = DotHttpRequestLoader.ParseRequests(File.ReadAllLines(httpFilePath), options);

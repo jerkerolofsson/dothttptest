@@ -1,5 +1,6 @@
 ﻿using DotHttpTest.Providers;
 using DotHttpTest.Providers.Json;
+using DotHttpTest.Providers.Random;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,6 +49,7 @@ namespace DotHttpTest.Builders
         public ClientOptionsBuilder UseDynamicVariableProvider()
         {
             mVariableProviders.Insert(0, new DynamicVariableProvider());
+            mVariableProviders.Insert(0, new RandomBytesProvider());
             return this;
         }
         public ClientOptionsBuilder UseEnvironmentVariablesProviders(EnvironmentVariableTarget target = EnvironmentVariableTarget.Process)

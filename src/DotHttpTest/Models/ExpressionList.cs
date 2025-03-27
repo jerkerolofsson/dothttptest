@@ -19,9 +19,13 @@ namespace DotHttpTest.Models
 
         public byte[] ToByteArray(Encoding encoding, TestStatus? status)
         {
-            return encoding.GetBytes(ToString(status));
+            var sb = new List<byte>();
+            foreach (var expression in mExpressions)
+            {
+                sb.AddRange(expression.ToByteArray(encoding, status));
+            }
+            return sb.ToArray();
         }
-
         public string ToString(TestStatus? status)
         {
             var sb = new StringBuilder();

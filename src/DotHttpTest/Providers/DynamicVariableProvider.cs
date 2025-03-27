@@ -16,7 +16,7 @@ namespace DotHttpTest.Providers
             var val = CalculateVariableValue(variableName);
             if (val != null)
             {
-                return new Variable() { Value = val };
+                return new StringVariable() { Value = val };
             }
             return null;
         }
@@ -30,7 +30,7 @@ namespace DotHttpTest.Providers
                     return DateTime.UtcNow.ToString("o");
                 case "$randomInt":
                     // Random value between 0 and 1000
-                    return Random.Shared.Next(0,1001).ToString();
+                    return System.Random.Shared.Next(0,1001).ToString();
             }
             return null;
         }

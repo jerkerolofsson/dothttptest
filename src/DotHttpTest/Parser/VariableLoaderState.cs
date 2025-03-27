@@ -85,7 +85,7 @@ namespace DotHttpTest.Parser
         {
             if (mLocalVariables.TryGetValue(name, out string? val))
             {
-                return new Variable()
+                return new StringVariable()
                 {
                     Value = val
                 };
@@ -102,7 +102,17 @@ namespace DotHttpTest.Parser
                     }
                 }
             }
-            throw new ArgumentException($"There is no variable named '{name}' found");
+            if (!mOptions.IgnoreMissingVariables)
+            {
+                throw new ArgumentException($"There is no variable named '{name}' found");
+            }
+            else
+            {
+                return new StringVariable()
+                {
+                    Value = "missing_value"
+                };
+            }
         }
         public void SetLocalVariable(string name, string val)
         {

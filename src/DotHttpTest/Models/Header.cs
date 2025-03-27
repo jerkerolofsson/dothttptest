@@ -6,7 +6,5 @@ using System.Threading.Tasks;
 
 namespace DotHttpTest.Models
 {
-    public abstract class Variable : Expression
-    {
-    }
+    public record Header(string? Name, List<string>? Values);
 }

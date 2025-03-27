@@ -8,10 +8,11 @@ namespace DotHttpTest.Metrics
 {
     public class Gauge : BaseMetric
     {
+        private double mLatest = double.MaxValue;
 
         public double MaxValue { get; protected set; } = double.MinValue;
         public double MinValue { get; protected set; } = double.MaxValue;
-        public double Latest { get; protected set; } = double.MaxValue;
+        public double Latest => mLatest;
 
         public Gauge(string name, string unit) : base(name, unit)
         {
@@ -19,9 +20,9 @@ namespace DotHttpTest.Metrics
 
         public void Set(double value)
         {
+            Interlocked.Exchange(ref mLatest, value);
             MaxValue = Math.Max(value, MaxValue);
             MinValue = Math.Min(value, MinValue);
-            Latest = value;
         }
     }
 }

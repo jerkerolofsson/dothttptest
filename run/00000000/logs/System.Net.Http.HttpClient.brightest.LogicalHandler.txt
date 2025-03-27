@@ -1,0 +1,11 @@
+﻿[11:12:09.683] Start processing HTTP request POST http://127.0.0.1:51000/node/backplane/listeners/spy/
+[11:12:09.684] Request Headers:
+x-brightest-token: ce043ff6-126a-4869-b210-7b557b889809
+Content-Type: text/plain; charset=utf-8
+
+[11:12:10.718] End processing HTTP request after 1037.9155ms - 503
+[11:12:10.718] Response Headers:
+Connection: close
+Proxy-Connection: close
+Content-Length: 0
+
