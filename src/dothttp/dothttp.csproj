@@ -9,11 +9,11 @@
 		<PackAsTool>True</PackAsTool>
 		<AssemblyVersion>1.0.0</AssemblyVersion>
 		<PackageIcon>icon.png</PackageIcon>
-		<Description>DotNetTest CLI application</Description>
-		<Title>DotNetTest CLI</Title>
+		<Description>DotHttpTest CLI application</Description>
+		<Title>DotHttpTest CLI</Title>
 		<Authors>Jerker Olofsson</Authors>
 		<Company>Jerker Olofsson</Company>
-		<PackageId>DotNetTestCLI</PackageId>
+		<PackageId>DotHttpTestCLI</PackageId>
 		<Version>1.0.7</Version>
 	</PropertyGroup>
 
