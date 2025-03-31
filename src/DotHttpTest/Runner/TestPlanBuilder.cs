@@ -51,6 +51,34 @@ namespace DotHttpTest.Runner
         private List<DotHttpRequest> mRequests = new();
         private TestPlan mTestPlan = new TestPlan();
 
+        /// <summary>
+        /// Loads a .http plan from a string
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="requestConfigurator"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public TestPlanBuilder LoadHttpText(string text, Action<DotHttpRequestBuilder> requestConfigurator, ClientOptions? options = null)
+        {
+            options ??= ClientOptions.DefaultOptions();
+
+            var requests = DotHttpRequest.Parse(text.Split('\n'), options);
+            foreach (var request in requests)
+            {
+                var requestBuilder = new DotHttpRequestBuilder(request);
+                requestConfigurator(requestBuilder);
+            }
+            mRequests.AddRange(requests);
+            return this;
+        }
+
+        /// <summary>
+        /// Loads a .http plan from a stream
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="requestConfigurator"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public TestPlanBuilder LoadHttpFile(Stream stream, Action<DotHttpRequestBuilder> requestConfigurator, ClientOptions? options = null)
         {
             options ??= ClientOptions.DefaultOptions();
@@ -76,8 +104,19 @@ namespace DotHttpTest.Runner
             return this;
         }
 
+        /// Loads a .http plan from a file
+        /// </summary>
+        /// <param name="httpFilePath"></param>
+        /// <param name="requestConfigurator"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public TestPlanBuilder LoadHttpFile(string httpFilePath, Action<DotHttpRequestBuilder> requestConfigurator, ClientOptions? options = null)
         {
+            if(!File.Exists(httpFilePath))
+            {
+                throw new FileNotFoundException("File not found: {httpFilePath}");
+            }
+
             options ??= ClientOptions.DefaultOptions();
 
             mTestPlan.Name = Path.GetFileNameWithoutExtension(httpFilePath);
@@ -92,6 +131,11 @@ namespace DotHttpTest.Runner
         }
         public TestPlanBuilder LoadHttpFile(string httpFilePath, ClientOptions? options = null)
         {
+            if (!File.Exists(httpFilePath))
+            {
+                throw new FileNotFoundException("File not found: {httpFilePath}");
+            }
+
             options ??= ClientOptions.DefaultOptions();
 
             mTestPlan.Name = Path.GetFileNameWithoutExtension(httpFilePath);
