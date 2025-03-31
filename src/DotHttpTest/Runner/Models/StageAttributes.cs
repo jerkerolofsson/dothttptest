@@ -14,6 +14,11 @@ namespace DotHttpTest.Runner.Models
         public string? Name { get; set; }
 
         /// <summary>
+        /// Identifier for a test
+        /// </summary>
+        public string? TestId { get; set; }
+
+        /// <summary>
         /// This is the time the stage is active. 
         /// The number of VUs with linearly increase to the target during this time
         /// </summary>

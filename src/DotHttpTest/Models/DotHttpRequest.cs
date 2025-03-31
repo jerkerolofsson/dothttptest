@@ -33,6 +33,18 @@ namespace DotHttpTest.Models
         public string? RequestName { get; set; }
 
         /// <summary>
+        /// A test identifier of the request. This can be loaded from a comment that looks like this
+        /// # @test my-test-id
+        /// </summary>
+        public string? TestId { get; set; }
+
+        /// <summary>
+        /// Description of the test case
+        /// # @description My description
+        /// </summary>
+        public string? Description { get; set; }
+
+        /// <summary>
         /// The URL for the request
         /// </summary>
         public ExpressionList? Url { get; internal set; }
@@ -135,6 +147,12 @@ namespace DotHttpTest.Models
                 {
                     case "name":
                         RequestName = val;
+                        break;
+                    case "description":
+                        Description = val;
+                        break;
+                    case "test":
+                        TestId = val;
                         break;
                     case "delay":
                         if(int.TryParse(val, out int millis))

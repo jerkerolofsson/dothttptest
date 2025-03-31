@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{06DD0E93
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dothttp", "src\dothttp\dothttp.csproj", "{765C366C-9568-480A-9E17-FAA3143EF511}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotHttpTest.Javascript", "src\DotHttpTest.Javascript\DotHttpTest.Javascript.csproj", "{2E0A39EA-2EF9-4C85-B360-59E36BCCD64F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,10 +37,6 @@ Global
 		{765C366C-9568-480A-9E17-FAA3143EF511}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{765C366C-9568-480A-9E17-FAA3143EF511}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{765C366C-9568-480A-9E17-FAA3143EF511}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2E0A39EA-2EF9-4C85-B360-59E36BCCD64F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E0A39EA-2EF9-4C85-B360-59E36BCCD64F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2E0A39EA-2EF9-4C85-B360-59E36BCCD64F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E0A39EA-2EF9-4C85-B360-59E36BCCD64F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,7 +46,6 @@ Global
 		{76AE03A4-043F-4729-907F-2DF47A1F61DB} = {06DD0E93-11E1-4C62-A3A5-1081E636CE32}
 		{1AC82EE0-EBFF-49B6-90C1-087566C14558} = {06DD0E93-11E1-4C62-A3A5-1081E636CE32}
 		{765C366C-9568-480A-9E17-FAA3143EF511} = {3708CB86-268D-46E9-9728-032061528EBF}
-		{2E0A39EA-2EF9-4C85-B360-59E36BCCD64F} = {3708CB86-268D-46E9-9728-032061528EBF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09E611BE-8CE6-4A3B-BA74-BF456E596B46}

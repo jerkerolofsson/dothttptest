@@ -88,7 +88,8 @@ namespace DotHttpTest.Runner
                     {
                         var basicRequestStage = new TestPlanStage(new StageAttributes()
                         {
-                            Name = request.RequestName
+                            Name = request.RequestName,
+                            TestId = request.TestId
                         });
                         mTestPlan.Stages.Add(basicRequestStage);
                         testStatus.CurrentStage = basicRequestStage;

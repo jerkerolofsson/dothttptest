@@ -64,6 +64,18 @@ namespace DotHttpTest.Runner
             mRequests.AddRange(requests);
             return this;
         }
+
+        /// <summary>
+        /// Sets the name of the test plan
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public TestPlanBuilder SetName(string name)
+        {
+            mTestPlan.Name = name;
+            return this;
+        }
+
         public TestPlanBuilder LoadHttpFile(string httpFilePath, Action<DotHttpRequestBuilder> requestConfigurator, ClientOptions? options = null)
         {
             options ??= ClientOptions.DefaultOptions();
@@ -122,6 +134,12 @@ namespace DotHttpTest.Runner
                         Target = 0,
                         Name = request.RequestName
                     });
+
+                    if(request.TestId is not null)
+                    {
+                        testPlanStage.Attributes.TestId = request.TestId;
+                    }
+
                     mTestPlan.Stages.Add(testPlanStage);
                     currentStages.Add(testPlanStage);
                 }

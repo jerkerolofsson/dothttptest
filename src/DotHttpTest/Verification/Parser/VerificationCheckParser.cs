@@ -36,6 +36,8 @@ namespace DotHttpTest.Verification.Parser
             new ("(contains)", VerificationOperation.Contains ),
             new ("(not contains)", VerificationOperation.NotContains ),
 
+            new ("(length equals)", VerificationOperation.LengthEquals ),
+
             // Value
             new ("(<=)", VerificationOperation.LessOrEquals ),
             new ("(>=)", VerificationOperation.GreaterOrEquals ),

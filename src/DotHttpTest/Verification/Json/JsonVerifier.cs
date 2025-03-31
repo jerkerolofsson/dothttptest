@@ -59,7 +59,7 @@ namespace DotHttpTest.Verification.Json
             }
             catch(Exception ex)
             {
-                result.Error = $"json: Error reading token from selector: {selector}: {ex.Message}";
+                result.Error = $"json: Error reading token from selector: {selector}: {ex.Message}\njson:\n{text}";
                 result.IsSuccess = false;
                 return Task.CompletedTask;
             }
@@ -71,16 +71,24 @@ namespace DotHttpTest.Verification.Json
                     return Task.CompletedTask;
                 }
 
-                result.Error = $"json: Not found: {selector}";
+                result.Error = $"json: Not found: {selector}\njson:\n{text}";
                 result.IsSuccess = false;
                 return Task.CompletedTask;
             }
             result.ActualValue = token.ToString();
             try
             {
-                if (!CompareValue(token, result.ActualValue, check.ExpectedValue, check.Operation))
+                if (!CompareValue(token, result.ActualValue, check.ExpectedValue, check.Operation, out var actualValue))
                 {
-                    result.Error = $"json: Expected: {check.ExpectedValue} but got {token.ToString()}";
+                    if (actualValue is null)
+                    {
+                        result.Error = $"json: Expected: {check.ExpectedValue} for operation {check.Operation} but got {token.ToString()}\njson:\n{text}";
+                    }
+                    else
+                    {
+                        result.ActualValue = actualValue;
+                        result.Error = $"json: Expected: {check.ExpectedValue} for operation {check.Operation} but got {actualValue}\njson:\n{text}";
+                    }
                     result.IsSuccess = false;
                     return Task.CompletedTask;
                 }

@@ -10,8 +10,10 @@ namespace DotHttpTest.Verification
 {
     public class ValueVerifier
     {
-        protected bool CompareValue(JToken token, object? value, string? expectedValue, VerificationOperation operation)
+        protected bool CompareValue(JToken token, object? value, string? expectedValue, VerificationOperation operation, out string? actualValue)
         {
+            actualValue = token.ToString();
+
             if (value is null)
             {
                 if (operation == VerificationOperation.NotExists)
@@ -30,6 +32,15 @@ namespace DotHttpTest.Verification
             {
                 switch (operation)
                 {
+                    case VerificationOperation.LengthEquals:
+                        var n = arr.Count;
+                        actualValue = n.ToString();
+
+                        if (n.ToString() == expectedValue)
+                        {
+                            return true;
+                        }
+                        return false;
                     case VerificationOperation.Contains:
                         foreach (var arrayValue in arr.Values())
                         {

@@ -30,7 +30,6 @@ namespace DotHttpTest.Reporting.JUnitXml
         {
             var doc = new XmlDocument();
 
-
             var testSuites = doc.CreateElement("testsuites");
             doc.AppendChild(testSuites);
 
@@ -61,7 +60,14 @@ namespace DotHttpTest.Reporting.JUnitXml
 
                 var testCase = doc.CreateElement("testcase");
                 testCase.SetAttribute("name", stage.PlannedStage.Attributes.Name);
-                testCase.SetAttribute("id", stage.PlannedStage.Attributes.Name);
+                if (stage.PlannedStage.Attributes.TestId is not null)
+                {
+                    testCase.SetAttribute("id", stage.PlannedStage.Attributes.TestId);
+                }
+                else
+                {
+                    testCase.SetAttribute("id", stage.PlannedStage.Attributes.Name);
+                }
                 testSuite.AppendChild(testCase);
 
                 var failedChecks = new List<VerificationCheckResult>();

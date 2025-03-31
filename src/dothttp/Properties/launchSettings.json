@@ -2,7 +2,11 @@
   "profiles": {
     "dothttp": {
       "commandName": "Project",
-      "commandLineArgs": " run c:\\temp\\loop.http"
+      "commandLineArgs": " run -p apa -r test.xml d:\\local\\code\\ess\\tests\\api\\buckets\\buckets.http ",
+      "environmentVariables": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhZjIzNTljZi1hZTU2LTQ4NmUtYjRiOS03YWZlMWFhNTI4OGIiLCJzdWIiOiJ0ZXN0LXVzZXIiLCJlbWFpbCI6InRlc3QtdXNlckBlYy5sYW4iLCJjbGllbnRfaWQiOiI4ZHIzUnAxeHhCekJLY1A0bnpEeXhyMHJtVWZPdmxOcSIsInJvbGVzIjpbIlJFQUQiLCJXUklURSIsIkFETUlOIl0sIm5iZiI6MTcyOTg0ODI2NiwiZXhwIjoxNzI5ODUxODY2LCJpYXQiOjE3Mjk4NDgyNjYsImlzcyI6ImVzcy5lYy5sYW4iLCJhdWQiOiJlY29yZGlhLW9uLXByZW1pc2UifQ.oJM88lma0isGqAP-WMk0BOKjs1CKvUjkjTY8K-xSMcs",
+        "ess_api": "https://localhost:5032"
+      }
     }
   }
 }

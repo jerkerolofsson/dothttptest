@@ -26,5 +26,6 @@ namespace DotHttpTest.Verification.Models
         // Array
         Contains,
         NotContains,
+        LengthEquals
     }
 }

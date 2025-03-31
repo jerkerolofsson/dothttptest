@@ -39,12 +39,14 @@ namespace DotHttpTest.Runner
         /// <param name="httpFilePath"></param>
         /// <param name=""></param>
         /// <returns></returns>
-        public TestPlanRunnerOptionsBuilder LoadHttpFile(string httpFilePath, Action<DotHttpRequestBuilder> requestBuilder)
+        public TestPlanRunnerOptionsBuilder LoadHttpFile(string httpFilePath, Action<DotHttpRequestBuilder> configureTest)
         {
             return ConfigureTestPlan((builder, options) => {
-                builder.LoadHttpFile(httpFilePath, requestBuilder, options);
+                builder.LoadHttpFile(httpFilePath, configureTest, options);
             });
         }
+     
+
         public TestPlanRunnerOptionsBuilder ConfigureTestPlan(Action<TestPlanBuilder, ClientOptions> testPlanConfigurator)
         {
             testPlanConfigurator(mTestPlanBuilder, mClientOptions);
