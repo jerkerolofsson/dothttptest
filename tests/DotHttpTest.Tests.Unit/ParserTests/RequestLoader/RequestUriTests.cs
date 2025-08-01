@@ -1,13 +1,6 @@
-﻿using DotHttpTest.Parser;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
+﻿namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
 {
-    [TestCategory("UnitTests")]
+    [UnitTest]
     [TestClass]
     public class RequestUriTests
     {
@@ -20,6 +13,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
 
             // Assert
             request.Should().NotBeNull();
+            request.Url.Should().NotBeNull();
             request.Url.ToString().Should().Be("http://localhost/index.html");
         }
 
@@ -32,7 +26,8 @@ namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
 
             // Assert
             request.Should().NotBeNull();
-            request.Url!.ToString().Should().Be("http://localhost/index.html");
+            request.Url.Should().NotBeNull();
+            request.Url.ToString().Should().Be("http://localhost/index.html");
         }
     }
 }

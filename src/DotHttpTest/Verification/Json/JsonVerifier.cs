@@ -28,7 +28,7 @@ namespace DotHttpTest.Verification.Json
             {
                 root = JObject.Parse(text);
             }
-            catch(Exception ex)
+            catch (Exception)
             {
                 // Root object may be an array, wrap it in an object so we can use SelectToken on it
                 var array = JArray.Parse(text);
@@ -39,7 +39,7 @@ namespace DotHttpTest.Verification.Json
                 {
                     selector = "$.Array";
                 }
-                else 
+                else
                 {
                     selector = "$.Array" + selector;
                 }
@@ -57,23 +57,28 @@ namespace DotHttpTest.Verification.Json
             {
                 token = root.SelectToken(selector);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 result.Error = $"json: Error reading token from selector: {selector}: {ex.Message}\njson:\n{text}";
                 result.IsSuccess = false;
                 return Task.CompletedTask;
             }
+            result.IsSuccess = VerifyJsonToken(result, check, selector, text, token);
+            return Task.CompletedTask;
+        }
+
+        internal static bool VerifyJsonToken(VerificationCheckResult result, VerificationCheck check, string selector, string actualJsonString, JToken? token)
+        {
             if (token == null)
             {
                 if (check.Operation == VerificationOperation.NotExists)
                 {
                     result.IsSuccess = true;
-                    return Task.CompletedTask;
+                    return true;
                 }
 
-                result.Error = $"json: Not found: {selector}\njson:\n{text}";
-                result.IsSuccess = false;
-                return Task.CompletedTask;
+                result.Error = $"json: Not found: {selector}\njson:\n{actualJsonString}";
+                return false;
             }
             result.ActualValue = token.ToString();
             try
@@ -82,26 +87,24 @@ namespace DotHttpTest.Verification.Json
                 {
                     if (actualValue is null)
                     {
-                        result.Error = $"json: Expected: {check.ExpectedValue} for operation {check.Operation} but got {token.ToString()}\njson:\n{text}";
+                        result.Error = $"json: Expected: '{check.ExpectedValue}' for {check.Operation}-Check but got '{token.ToString()}'\njson:\n{actualJsonString}";
                     }
                     else
                     {
                         result.ActualValue = actualValue;
-                        result.Error = $"json: Expected: {check.ExpectedValue} for operation {check.Operation} but got {actualValue}\njson:\n{text}";
+                        result.Error = $"json: Expected: '{check.ExpectedValue}' for {check.Operation}-Check but got '{actualValue}'\njson:\n{actualJsonString}";
                     }
-                    result.IsSuccess = false;
-                    return Task.CompletedTask;
+                    return false;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 result.Error = $"json: {ex.Message}";
-                result.IsSuccess = false;
-                return Task.CompletedTask;
+                return false;
             }
             result.IsSuccess = true;
             result.Error = null;
-            return Task.CompletedTask;
+            return true;
         }
     }
 }

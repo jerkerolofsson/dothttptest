@@ -1,17 +1,11 @@
 ﻿using DotHttpTest.Runner;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DotHttpTest.Tests.Unit.ParserTests
 {
-    [TestCategory("UnitTests")]
+    [UnitTest]
     [TestClass]
     public class StageParserTests
     {
-
         [TestMethod]
         public void ParseStage_WithCount10_IterationsSetCorrectly()
         {

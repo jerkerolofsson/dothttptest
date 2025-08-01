@@ -14,6 +14,7 @@ namespace DotHttpTest.Parser
         private readonly string[] mLines;
         private int mCurrentLine = 1;
         private TokenizerState mState = TokenizerState.ExpectedRequestHeader;
+        private string mSchema = "HTTP";
 
         public DotHttpTokenizer(string[] lines) 
         {
@@ -78,6 +79,11 @@ namespace DotHttpTest.Parser
                 case TokenizerState.ExpectedRequestHeader:
                     foreach (var token in ParseRequestHeader(mCurrentLine, line))
                     {
+                        if(token.Type == HttpTokenType.HttpVersion)
+                        {
+                            mSchema = token.Data.Split('/').First();
+                        }
+
                         yield return token;
                     }
                     mState = TokenizerState.ExpectHeaders;

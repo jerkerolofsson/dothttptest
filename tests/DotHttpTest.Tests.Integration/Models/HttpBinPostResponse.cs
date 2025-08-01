@@ -33,9 +33,9 @@ namespace DotHttpTest.Tests.Integration.Models
 
     public class Headers
     {
-        public string ContentLength { get; set; }
-        public string ContentType { get; set; }
-        public string Host { get; set; }
+        public string? ContentLength { get; set; }
+        public string? ContentType { get; set; }
+        public string? Host { get; set; }
     }
 
 }

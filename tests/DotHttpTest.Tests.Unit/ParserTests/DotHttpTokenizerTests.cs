@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DotHttpTest.Tests.Unit.TokenizerTests
 {
-    [TestCategory("UnitTests")]
+    [UnitTest]
     [TestClass]
     public class DotHttpTokenizerTests
     {

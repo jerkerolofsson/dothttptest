@@ -1,18 +1,9 @@
 ﻿using DotHttpTest.Converters;
-using DotHttpTest.Parser;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace DotHttpTest
 {
-    public class DotHttpClient : IDisposable
+    public partial class DotHttpClient : IDisposable
     {
         private readonly HttpClient mClient;
         private readonly ClientOptions mOptions;
@@ -65,6 +56,33 @@ namespace DotHttpTest
         public async Task<DotHttpResponse> SendAsync(DotHttpRequest request, TestStatus? status, StageWorkerState? stageWorkerState, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
+
+            RequestProtocol protocol = RequestProtocolDetector.Detect(request, status, stageWorkerState);
+
+            DotHttpResponse response;
+            switch (protocol)
+            {
+                case RequestProtocol.Http:
+                    response = await SendHttpAsync(request, status, stageWorkerState, cancellationToken);
+                    break;
+
+                case RequestProtocol.Mcp:
+                    response = await SendMcpAsync(request, status, stageWorkerState, cancellationToken);
+                    break;
+
+                default:
+                    throw new NotSupportedException($"Request protocol '{protocol}' is not supported.");
+            }
+
+            if (mVerifierFactory is not null)
+            {
+                await mVerifierFactory.VerifyAsync(response);
+            }
+            return response;
+        }
+
+        private async Task<DotHttpResponse> SendHttpAsync(DotHttpRequest request, TestStatus? status, StageWorkerState? stageWorkerState, CancellationToken cancellationToken = default)
+        {
             var httpRequestMessage = request.ToHttpRequestMessage(status, stageWorkerState);
             if (status is not null)
             {
@@ -125,10 +143,7 @@ namespace DotHttpTest
                 }
 
             }
-            if (mVerifierFactory is not null)
-            {
-                await mVerifierFactory.VerifyAsync(response);
-            }
+         
             return response;
         }
 

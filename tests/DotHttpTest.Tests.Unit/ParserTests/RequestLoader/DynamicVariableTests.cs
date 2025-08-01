@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
+﻿namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
 {
-    [TestCategory("UnitTests")]
+    [UnitTest]
     [TestClass]
     public class DynamicVariableTests
     {
@@ -22,8 +16,8 @@ namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
             request.Url.Should().NotBeNull();
             var uri = new Uri(request.Url!.ToString());
             var port = uri.Port;
-            Assert.IsTrue(port >= 0);
-            Assert.IsTrue(port <= 1000);
+            Assert.IsGreaterThanOrEqualTo(0, port);
+            Assert.IsLessThanOrEqualTo(1000, port);
         }
 
         [TestMethod]

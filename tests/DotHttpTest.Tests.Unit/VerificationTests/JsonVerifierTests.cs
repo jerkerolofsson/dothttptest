@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DotHttpTest.Tests.Unit.VerificationTests
 {
-    [TestCategory("UnitTests")]
+    [UnitTest]
     [TestClass]
     public class JsonVerifierTests
     {
@@ -92,7 +92,7 @@ namespace DotHttpTest.Tests.Unit.VerificationTests
             await verifier.VerifyAsync(response, result);
 
             // Assert
-            Assert.IsTrue(result.IsSuccess, result.Error);
+            Assert.IsTrue(result.IsSuccess, result.Error??"");
         }
 
         [TestMethod]
@@ -112,7 +112,7 @@ namespace DotHttpTest.Tests.Unit.VerificationTests
             await verifier.VerifyAsync(response, result);
 
             // Assert
-            Assert.IsTrue(result.IsSuccess, result.Error);
+            Assert.IsTrue(result.IsSuccess, result.Error ?? "");
         }
 
 
@@ -133,7 +133,7 @@ namespace DotHttpTest.Tests.Unit.VerificationTests
             await verifier.VerifyAsync(response, result);
 
             // Assert
-            Assert.IsTrue(result.IsSuccess, result.Error);
+            Assert.IsTrue(result.IsSuccess, result.Error ?? "");
         }
 
         [TestMethod]
@@ -154,7 +154,7 @@ namespace DotHttpTest.Tests.Unit.VerificationTests
             await verifier.VerifyAsync(response, result);
 
             // Assert
-            Assert.IsFalse(result.IsSuccess, result.Error);
+            Assert.IsFalse(result.IsSuccess, result.Error ?? "");
         }
 
 
@@ -176,7 +176,7 @@ namespace DotHttpTest.Tests.Unit.VerificationTests
             await verifier.VerifyAsync(response, result);
 
             // Assert
-            Assert.IsTrue(result.IsSuccess, result.Error);
+            Assert.IsTrue(result.IsSuccess, result.Error ?? "");
         }
 
 
@@ -197,7 +197,7 @@ namespace DotHttpTest.Tests.Unit.VerificationTests
             await verifier.VerifyAsync(response, result);
 
             // Assert
-            Assert.IsTrue(result.IsSuccess, result.Error);
+            Assert.IsTrue(result.IsSuccess, result.Error ?? "");
         }
 
         [TestMethod]
@@ -217,7 +217,7 @@ namespace DotHttpTest.Tests.Unit.VerificationTests
             await verifier.VerifyAsync(response, result);
 
             // Assert
-            Assert.IsTrue(result.IsSuccess, result.Error);
+            Assert.IsTrue(result.IsSuccess, result.Error ?? "");
         }
         [TestMethod]
         public async Task VerifyAsync_ArrayPropertyContains_WithNoItemMatch_IsNotSuccess()
@@ -236,7 +236,7 @@ namespace DotHttpTest.Tests.Unit.VerificationTests
             await verifier.VerifyAsync(response, result);
 
             // Assert
-            Assert.IsFalse(result.IsSuccess, result.Error);
+            Assert.IsFalse(result.IsSuccess, message:result.Error??"");
         }
     }
 }

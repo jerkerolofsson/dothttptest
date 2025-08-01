@@ -4,6 +4,7 @@ using DotHttpTest.Providers.Random;
 using DotHttpTest.Providers.State;
 using DotHttpTest.Verification.Http;
 using DotHttpTest.Verification.Json;
+using DotHttpTest.Verification.Mcp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace DotHttpTest.Builders
 
         public ClientOptionsBuilder()
         {
+            UseMcpVerifiers();
             UseJsonVerifier();
             UseHttpVerifier();
         }
@@ -47,6 +49,12 @@ namespace DotHttpTest.Builders
         public ClientOptionsBuilder WithVerifiers(IVerifier verifier)
         {
             mVerifiers.Add(verifier);
+            return this;
+        }
+
+        public ClientOptionsBuilder UseMcpVerifiers()
+        {
+            mVerifiers.Add(new McpToolVerifier());
             return this;
         }
 

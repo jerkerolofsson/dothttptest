@@ -8,7 +8,7 @@ using DotHttpTest.Converters;
 
 namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
 {
-    [TestCategory("UnitTests")]
+    [UnitTest]
     [TestClass]
     public class HttpHeaderTests
     {
@@ -81,7 +81,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
             var dotRequest = DotHttpRequestLoader.ParseRequest(File.ReadAllLines("TestData/Requests/Post/post_with_content_type_header.http"));
 
             // Assert
-            Assert.ThrowsException<AssertFailedException>(() =>
+            Assert.Throws<FluentAssertions.Execution.AssertionFailedException>(() =>
             {
                 dotRequest.Should().NotBeNull().And.HaveContentMediaType("text/plain");
             });

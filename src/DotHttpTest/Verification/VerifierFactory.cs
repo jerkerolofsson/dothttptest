@@ -14,6 +14,7 @@ namespace DotHttpTest.Verification
 
         public VerifierFactory(ClientOptions options)
         {
+            mVerifiers.Add(new Mcp.McpToolVerifier());
             mVerifiers.Add(new Json.JsonVerifier());
             mVerifiers.Add(new Http.HttpVerifier());
             mVerifiers.Add(new Http.HttpHeaderVerifier());
@@ -73,7 +74,7 @@ namespace DotHttpTest.Verification
                 else
                 {
                     result.IsSuccess = false;
-                    result.Error = $"Verifier {verificationCheck.VerifierId} not found";
+                    result.Error = $"Verifier with ID '{verificationCheck.VerifierId}' not found";
                 }
             }
         }

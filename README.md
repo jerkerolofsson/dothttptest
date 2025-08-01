@@ -1,6 +1,8 @@
 # dothttptest
 .NET Test Framework for API tests with .http files
 
+Supporting HTTP and MCP
+
 ## Why another HTTP test framework?
 
 I like .http files. They make development and debugging easy. 
@@ -9,6 +11,57 @@ With integration in VS Code, Visual Studio and Rider I like that I don't have to
 They are simple and efficient. Can be shared within the development team. They can be shared with a QA team.
 
 As a developer, I also don't like duplicating work. I was searching for a test framework where I can re-use my .http files for API testing, but I didn't find anything that allowed me to do it using C#.
+
+## MCP
+
+To test MCP, set the VERSION in the request header to MCP
+
+### List tools
+
+```http
+LIST  http://localhost/mcp MCP
+```
+
+This will verify that tools can be listed
+
+#### Verify that a tool exists
+
+```http
+# @verify tool browser_close exists
+LIST http://localhost/mcp MCP
+```
+The "tool" verifier will evaluate the MCP ListToolsResult. This example will check if there is a tool with the name "browser_close" in the result.
+
+#### Verify that a tool parameter is declared
+
+```http
+# @verify tool browser_navigate.inputSchema.properties.url exists
+LIST http://localhost/mcp MCP
+```
+
+#### Using json verifier for MCP tool listing
+
+You can also use the json verifier for advanced evaluation of the list tools result.
+The content of the tool listing is an array of tools according to MCP schema.
+
+### Invoke a MCP tool
+
+To call a tool use the CALL method with the tool name in the request URL after a #
+
+```http
+CALL http://localhost/mcp#browser_close MCP
+```
+
+#### Invoke a tool with parameters 
+
+To invoke a tool with parameters, use the CALL method with the tool name in the request URL after a # and pass the parameters in the body of the request:
+```http
+CALL http://localhost/mcp#browser_navigate MCP
+
+{
+	"url": "https://www.github.com"
+}
+```
 
 ## Extensions in .http file
 

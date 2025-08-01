@@ -1,15 +1,8 @@
 ﻿using DotHttpTest.Models;
-using DotHttpTest.Parser;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DotHttpTest.Tests.Unit.ParserTests
 {
-    [TestCategory("UnitTests")]
+    [UnitTest]
     [TestClass]
     public class VariableLoaderStateTests
     {

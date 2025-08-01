@@ -33,7 +33,8 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="FluentAssertions" Version="7.2.0" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.7" />
+		<PackageReference Include="ModelContextProtocol" Version="0.3.0-preview.3" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 

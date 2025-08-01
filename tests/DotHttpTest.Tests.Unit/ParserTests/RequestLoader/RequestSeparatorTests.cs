@@ -1,13 +1,6 @@
-﻿using DotHttpTest.Parser;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
+﻿namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
 {
-    [TestCategory("UnitTests")]
+    [UnitTest]
     [TestClass]
     public class RequestSeparatorTests
     {
@@ -20,7 +13,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
             var requests = DotHttpRequestLoader.ParseRequests(File.ReadAllLines("TestData/Requests/Post/two_requests_with_content.http"));
 
             // Assert
-            Assert.AreEqual(2, requests.Count);
+            Assert.HasCount(2, requests);
         }
         [TestMethod]
         public void DotHttpRequestLoader_WithTwoRequestsInSingleFile_TwoRequestsAreReturned()
@@ -57,7 +50,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
             var requests = DotHttpRequestLoader.ParseRequests(File.ReadAllLines("TestData/Requests/Get/get_no_content.http"));
 
             // Assert
-            Assert.AreEqual(1, requests.Count);
+            Assert.HasCount(1, requests);
         }
     }
 }

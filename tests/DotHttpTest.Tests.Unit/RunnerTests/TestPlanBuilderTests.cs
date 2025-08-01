@@ -1,13 +1,8 @@
 ﻿using DotHttpTest.Runner;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DotHttpTest.Tests.Unit.RunnerTests
 {
-    [TestCategory("UnitTests")]
+    [UnitTest]
     [TestClass]
     public class TestPlanBuilderTests
     {
@@ -21,7 +16,7 @@ namespace DotHttpTest.Tests.Unit.RunnerTests
             var testPlan = new TestPlanBuilder().Add(dotRequests).Build();
 
             // Assert
-            Assert.AreEqual(1, testPlan.Stages.Count);
+            Assert.HasCount(1, testPlan.Stages);
         }
 
         [TestMethod]
@@ -34,7 +29,7 @@ namespace DotHttpTest.Tests.Unit.RunnerTests
             var testPlan = new TestPlanBuilder().Add(dotRequests).Build();
 
             // Assert
-            Assert.AreEqual(1, testPlan.Stages[0].Requests.Count);
+            Assert.HasCount(1, testPlan.Stages[0].Requests);
         }
 
         [TestMethod]
@@ -47,10 +42,10 @@ namespace DotHttpTest.Tests.Unit.RunnerTests
             var testPlan = new TestPlanBuilder().Add(dotRequests).Build();
 
             // Assert
-            Assert.AreEqual(3, testPlan.Stages.Count);
+            Assert.HasCount(3, testPlan.Stages);
             foreach (var stage in testPlan.Stages)
             {
-                Assert.AreEqual(1, stage.Requests.Count);
+                Assert.HasCount(1, stage.Requests);
             }
         }
 
@@ -64,10 +59,10 @@ namespace DotHttpTest.Tests.Unit.RunnerTests
             var testPlan = new TestPlanBuilder().Add(dotRequests).Build();
 
             // Assert
-            Assert.AreEqual(1, testPlan.Stages.Count);
+            Assert.HasCount(1, testPlan.Stages);
             foreach (var stage in testPlan.Stages)
             {
-                Assert.AreEqual(2, stage.Requests.Count);
+                Assert.HasCount(2, stage.Requests);
             }
         }
 
@@ -82,9 +77,9 @@ namespace DotHttpTest.Tests.Unit.RunnerTests
             var testPlan = new TestPlanBuilder().Add(dotRequests).Build();
 
             // Assert
-            Assert.AreEqual(2, testPlan.Stages.Count);
-            Assert.AreEqual(1, testPlan.Stages[0].Requests.Count);
-            Assert.AreEqual(1, testPlan.Stages[1].Requests.Count);
+            Assert.HasCount(2, testPlan.Stages);
+            Assert.HasCount(1, testPlan.Stages[0].Requests);
+            Assert.HasCount(1, testPlan.Stages[1].Requests);
             Assert.AreEqual("request1", testPlan.Stages[0].Requests[0].RequestName);
             Assert.AreEqual("request2", testPlan.Stages[1].Requests[0].RequestName);
         }

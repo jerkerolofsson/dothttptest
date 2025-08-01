@@ -3,6 +3,7 @@ using DotHttpTest.Runner;
 using DotHttpTest.Tests.Integration.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using TestBucket.Traits.MSTest;
 
 namespace DotHttpTest.Tests.Integration
 {
@@ -12,7 +13,7 @@ namespace DotHttpTest.Tests.Integration
     /// docker run -p 13080:80 kennethreitz/httpbin:latest
     /// 
     /// </summary>
-    [TestCategory("IntegrationTests")]
+    [IntegrationTest]
     [TestClass]
     public class HttpBinTests
     {
@@ -77,7 +78,7 @@ namespace DotHttpTest.Tests.Integration
             var status = await runner.RunAsync();
 
             // Assert
-            Assert.AreEqual(0, status.FailedChecks.Count);
+            Assert.IsEmpty(status.FailedChecks);
         }
 
 
@@ -97,7 +98,7 @@ namespace DotHttpTest.Tests.Integration
             var status = await runner.RunAsync();
 
             // Assert
-            Assert.AreEqual(0, status.FailedChecks.Count);
+            Assert.IsEmpty(status.FailedChecks);
         }
         [TestMethod]
         public async Task Run_WithJsonVariableInRequestUri_CheckPassed()
@@ -115,7 +116,7 @@ namespace DotHttpTest.Tests.Integration
             var status = await runner.RunAsync();
 
             // Assert
-            Assert.AreEqual(0, status.FailedChecks.Count);
+            Assert.IsEmpty(status.FailedChecks);
         }
 
         [TestMethod]
@@ -134,7 +135,7 @@ namespace DotHttpTest.Tests.Integration
             var status = await runner.RunAsync();
 
             // Assert
-            Assert.AreEqual(0, status.FailedChecks.Count);
+            Assert.IsEmpty(status.FailedChecks);
         }
         [TestMethod]
         public async Task Run_WithJsonVariable_ForwardedFromResponseToNextRequest()
@@ -152,7 +153,7 @@ namespace DotHttpTest.Tests.Integration
             var status = await runner.RunAsync();
 
             // Assert
-            Assert.AreEqual(0, status.FailedChecks.Count);
+            Assert.IsEmpty(status.FailedChecks);
         }
 
         [TestMethod]

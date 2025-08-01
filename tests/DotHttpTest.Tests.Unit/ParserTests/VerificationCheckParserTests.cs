@@ -1,15 +1,10 @@
 ﻿using DotHttpTest.Verification.Models;
 using DotHttpTest.Verification.Parser;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+#pragma warning disable MSTEST0017 // Assertion arguments should be passed in the correct order
 
 namespace DotHttpTest.Tests.Unit.ParserTests
 {
-    [TestCategory("UnitTests")]
+    [UnitTest]
     [TestClass]
     public class VerificationCheckParserTests
     {
@@ -70,6 +65,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests
             var check = VerificationCheckParser.Parse("http status-code 200");
 
             // Assert
+            Assert.IsNotNull(check.ExpectedValue);
             Assert.AreEqual("200", check.ExpectedValue);
         }
         [TestMethod]
@@ -109,6 +105,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests
             var check = VerificationCheckParser.Parse("http status-code is 200");
 
             // Assert
+            Assert.IsNotNull(check.ExpectedValue);
             Assert.AreEqual("200", check.ExpectedValue);
         }
 
@@ -119,6 +116,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests
             var check = VerificationCheckParser.Parse("http status-code regex (200|202)");
 
             // Assert
+            Assert.IsNotNull(check.ExpectedValue);
             Assert.AreEqual("(200|202)", check.ExpectedValue);
         }
 
@@ -140,6 +138,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests
             var check = VerificationCheckParser.Parse("json $.Count 1");
 
             // Assert
+            Assert.IsNotNull(check.ExpectedValue);
             Assert.AreEqual("1", check.ExpectedValue);
             Assert.AreEqual("json", check.VerifierId);
             Assert.AreEqual(VerificationOperation.Equals, check.Operation);
@@ -152,7 +151,8 @@ namespace DotHttpTest.Tests.Unit.ParserTests
             var check = VerificationCheckParser.Parse("json $.Count == 1");
 
             // Assert
-            Assert.AreEqual("1", check.ExpectedValue);
+            Assert.IsNotNull(check.ExpectedValue);
+            Assert.AreEqual("1",check.ExpectedValue);
             Assert.AreEqual("json", check.VerifierId);
             Assert.AreEqual(VerificationOperation.Equals, check.Operation);
         }
@@ -164,9 +164,11 @@ namespace DotHttpTest.Tests.Unit.ParserTests
             var check = VerificationCheckParser.Parse("json $.Count == A B");
 
             // Assert
+            Assert.IsNotNull(check.ExpectedValue);
             Assert.AreEqual("A B", check.ExpectedValue);
             Assert.AreEqual("json", check.VerifierId);
             Assert.AreEqual(VerificationOperation.Equals, check.Operation);
         }
     }
 }
+#pragma warning restore MSTEST0017 // Assertion arguments should be passed in the correct order

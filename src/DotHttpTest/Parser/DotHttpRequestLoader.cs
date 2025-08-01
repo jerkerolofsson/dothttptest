@@ -1,14 +1,8 @@
-﻿using DotHttpTest.Models;
-using DotHttpTest.Parser.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DotHttpTest.Parser.Models;
 
 namespace DotHttpTest.Parser
 {
-    internal class DotHttpRequestLoader
+    public class DotHttpRequestLoader
     {
         private readonly ClientOptions mOptions;
         private readonly VariableLoaderState mVariableLoaderState;
@@ -26,6 +20,16 @@ namespace DotHttpTest.Parser
         }
 
         /// <summary>
+        /// Loads a single request from the string
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static DotHttpRequest ParseRequest(string text, ClientOptions? options = null)
+        {
+            return ParseRequest(text.Split('\n'), options);
+        }
+
+        /// <summary>
         /// Loads a single request from the specified lines
         /// </summary>
         /// <param name="lines"></param>
@@ -37,6 +41,10 @@ namespace DotHttpTest.Parser
             return loader.ParseRequestLines(lines);
         }
 
+        public static List<DotHttpRequest> ParseRequests(string text, ClientOptions? options = null)
+        {
+            return ParseRequests(text.Split('\n'), options);
+        }
         public static List<DotHttpRequest> ParseRequests(string[] lines, ClientOptions? options = null)
         {
             options ??= ClientOptions.DefaultOptions();

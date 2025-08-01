@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
 {
-    [TestCategory("UnitTests")]
+    [UnitTest]
     [TestClass]
     public class BodyTests
     {

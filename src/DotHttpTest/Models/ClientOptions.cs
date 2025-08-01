@@ -49,6 +49,7 @@ namespace DotHttpTest.Models
                 .ClearVariableProviders()
                 .UseHttpVerifier()
                 .UseJsonVerifier()
+                .UseMcpVerifiers()
                 .ClearVariableProviders()
                 .UseDefaultVariableProvider()
                 .UseDynamicVariableProvider()

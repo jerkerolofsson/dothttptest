@@ -10,7 +10,7 @@ namespace DotHttpTest.Verification
 {
     public class ValueVerifier
     {
-        protected bool CompareValue(JToken token, object? value, string? expectedValue, VerificationOperation operation, out string? actualValue)
+        protected static bool CompareValue(JToken token, object? value, string? expectedValue, VerificationOperation operation, out string? actualValue)
         {
             actualValue = token.ToString();
 
@@ -67,7 +67,7 @@ namespace DotHttpTest.Verification
             return CompareValue(value, expectedValue, operation);
         }
 
-        protected bool CompareValue(object? value, string? expectedValue, VerificationOperation operation)
+        protected static bool CompareValue(object? value, string? expectedValue, VerificationOperation operation)
         {
             if (value is null)
             {
@@ -160,7 +160,7 @@ namespace DotHttpTest.Verification
             }
         }
 
-        private double ToDouble(string? value)
+        private static double ToDouble(string? value)
         {
             if (value is null)
             {

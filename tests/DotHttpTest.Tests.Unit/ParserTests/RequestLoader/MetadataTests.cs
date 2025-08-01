@@ -1,13 +1,6 @@
-﻿using DotHttpTest.Parser;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
+﻿namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
 {
-    [TestCategory("UnitTests")]
+    [UnitTest]
     [TestClass]
     public class MetadataTests
     {
@@ -20,7 +13,7 @@ namespace DotHttpTest.Tests.Unit.ParserTests.RequestLoader
             var requests = DotHttpRequestLoader.ParseRequests(File.ReadAllLines("TestData/Requests/Get/get_with_intellij_name.http"));
 
             // Assert
-            Assert.AreEqual(1, requests.Count);
+            Assert.HasCount(1, requests);
             Assert.IsNotNull(requests[0].RequestName);
             Assert.AreEqual("GetIndex", requests[0].RequestName);
         }
