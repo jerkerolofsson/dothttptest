@@ -38,6 +38,61 @@ namespace DotHttpTest.Tests.Integration
         }
 
         [TestMethod]
+        public async Task RunDurationTest_WithMcp()
+        {
+            var request = $$"""
+                # @stage ramp-up   duration:5s target:1
+                # @stage main      duration:1m target:1
+
+                # @name Open Github
+                # @verify mcp success
+                CALL {{_server}}#browser_navigate MCP/SSE
+
+                {
+                    "url": "https://www.github.com"
+                }
+
+                ###
+
+                # @name Press Slash
+                # @verify mcp success
+                CALL {{_server}}#browser_press_key MCP/SSE
+
+                {
+                    "key": "Slash"
+                }
+
+                ###
+
+                # @name Press Escape
+                # @verify mcp success
+                CALL {{_server}}#browser_press_key MCP/SSE
+
+                {
+                    "key": "Escape"
+                }
+
+                ###
+
+                # @name Close
+                # @verify mcp success
+                CALL {{_server}}#browser_close MCP/SSE
+                
+                """;
+
+            var dotRequests = DotHttpRequestLoader.ParseRequests(request);
+
+            // Act
+            var testPlan = new TestPlanBuilder().Add(dotRequests).Build();
+
+            var runnerOptions = new TestPlanRunnerOptions();
+            var runner = new TestPlanRunner(testPlan, runnerOptions);
+
+            var result = await runner.RunAsync();
+            AssertNoFailure(result);
+        }
+
+        [TestMethod]
         public async Task CallTool_VerifyTextContent()
         {
             // Arrange

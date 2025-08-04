@@ -152,11 +152,12 @@ namespace DotHttpTest.Runner
 
         public TestPlan Build()
         {
-
             List<TestPlanStage> currentStages = new();
 
             foreach(var request in mRequests)
             {
+                // If stages are defined, create new list of stages
+                // for example, ramp-up, main, ramp-down
                 if(request.HasStages)
                 {
                     currentStages = new List<TestPlanStage>();
@@ -171,7 +172,7 @@ namespace DotHttpTest.Runner
                 if (currentStages.Count == 0)
                 {
                     // If no stage is defined, this is a a request that is declared
-                    // before any stage, then create an anonymous stage
+                    // before any stage, then create a stage for the specific request
                     var testPlanStage = new TestPlanStage(new StageAttributes()
                     {
                         Duration = TimeSpan.Zero,

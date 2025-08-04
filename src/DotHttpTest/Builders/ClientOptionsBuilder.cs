@@ -5,12 +5,6 @@ using DotHttpTest.Providers.State;
 using DotHttpTest.Verification.Http;
 using DotHttpTest.Verification.Json;
 using DotHttpTest.Verification.Mcp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.WebRequestMethods;
 
 namespace DotHttpTest.Builders
 {

@@ -1,17 +1,15 @@
 ﻿using ModelContextProtocol.Client;
 using ModelContextProtocol.Protocol;
-using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace DotHttpTest
 {
     public partial class DotHttpClient
     {
+        private ConcurrentDictionary<string,IMcpClient> mMcpClients = new();
+
         private async Task<DotHttpResponse> SendMcpAsync(DotHttpRequest request, TestStatus? status, StageWorkerState? stageWorkerState, CancellationToken cancellationToken)
         {
             if (request.Method is null)
@@ -52,7 +50,9 @@ namespace DotHttpTest
             var metrics = new HttpRequestMetrics();
             IReadOnlyDictionary<string, object?>? arguments = ParseArguments(request);
 
+            var timestamp = Stopwatch.GetTimestamp();
             var result = await client.CallToolAsync(tool, arguments, null, ModelContextProtocol.McpJsonUtilities.DefaultOptions, cancellationToken);
+            metrics.HttpRequestDuration.SetValue(Stopwatch.GetElapsedTime(timestamp).TotalSeconds);
 
             // Wrap in HTTP response
             var httpResponse = new HttpResponseMessage()
@@ -73,6 +73,10 @@ namespace DotHttpTest
         private IReadOnlyDictionary<string, object?>? ParseArguments(DotHttpRequest request)
         {
             var json = request.GetBodyAsText();
+            if(string.IsNullOrEmpty(json))
+            {
+                return new Dictionary<string, object?>();
+            }
             return JsonSerializer.Deserialize<Dictionary<string, object?>>(json);
         }
 
@@ -88,12 +92,13 @@ namespace DotHttpTest
             {
                 tools.Add(tool.ProtocolTool);
             }
-            metrics.HttpRequestDuration.SetValue(Stopwatch.GetElapsedTime(timestamp).TotalMilliseconds);
+            metrics.HttpRequestDuration.SetValue(Stopwatch.GetElapsedTime(timestamp).TotalSeconds);
 
             string json = JsonSerializer.Serialize(tools, ModelContextProtocol.McpJsonUtilities.DefaultOptions);
 
             var httpResponse = new HttpResponseMessage()
             {
+                StatusCode = HttpStatusCode.OK,
                 Content = new StringContent(json, Encoding.UTF8, "application/json")
             };
 
@@ -102,28 +107,37 @@ namespace DotHttpTest
                 ContentBytes = Encoding.UTF8.GetBytes(json),
                 Request = request
             };
-
         }
 
         private async Task<IMcpClient> CreateMcpClientAsync(DotHttpRequest request, TestStatus? status, StageWorkerState? stageWorkerState)
         {
             if (request.Url is null)
             {
-                throw new ArgumentNullException("Method cannot be null");
+                throw new ArgumentNullException("Request URL cannot be null");
             }
 
-            Dictionary<string, string> headers = GetHttpHeaders(request, status, stageWorkerState);
+            var endpoint = request.Url.ToString(status, stageWorkerState);
+            var endpointComponents = endpoint.Split('#');
+            var url = endpointComponents[0];
+
             HttpTransportMode mode = GetMcpHttpTransportMode(request, status, stageWorkerState);
 
-            var endpoint = request.Url.ToString(status, stageWorkerState);
-            var clientTransport = new SseClientTransport(new SseClientTransportOptions
-            {
-                Endpoint = new Uri(endpoint),
-                AdditionalHeaders = headers,
-                TransportMode = mode,
-            });
+            var key = url + mode.ToString();
 
-            var client = await McpClientFactory.CreateAsync(clientTransport);
+            if (!mMcpClients.TryGetValue(key, out var client))
+            {
+                Dictionary<string, string> headers = GetHttpHeaders(request, status, stageWorkerState);
+
+                var clientTransport = new SseClientTransport(new SseClientTransportOptions
+                {
+                    Endpoint = new Uri(url),
+                    AdditionalHeaders = headers,
+                    TransportMode = mode,
+                });
+
+                client = await McpClientFactory.CreateAsync(clientTransport);
+                mMcpClients[key] = client;
+            }
             return client;
         }
 

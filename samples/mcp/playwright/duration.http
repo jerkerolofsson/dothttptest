@@ -1,0 +1,35 @@
+# @stage main      count:10
+
+# @name Open Github
+# @verify mcp success
+CALL http://localhost:33323/sse#browser_navigate MCP/SSE
+
+{
+    "url": "https://www.github.com"
+}
+
+###
+
+# @name Press Slash
+# @verify mcp success
+CALL http://localhost:33323/sse#browser_press_key MCP/SSE
+
+{
+    "key": "Slash"
+}
+
+###
+
+# @name Press Escape
+# @verify mcp success
+CALL http://localhost:33323/sse#browser_press_key MCP/SSE
+
+{
+    "key": "Escape"
+}
+
+###
+
+# @name Close
+# @verify mcp success
+CALL http://localhost:33323/sse#browser_close MCP/SSE

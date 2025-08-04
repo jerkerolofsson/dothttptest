@@ -1,11 +1,5 @@
-﻿using DotHttpTest.Runner.Models;
-using DotHttpTest.Runner.Utils;
-using System;
-using System.Collections.Generic;
+﻿using DotHttpTest.Runner.Utils;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DotHttpTest.Runner
 {
@@ -22,12 +16,26 @@ namespace DotHttpTest.Runner
             mTestPlan = testPlan;
             mTestPlanOptions = options;
         }
-
         public async Task<TestStatus> RunAsync(CancellationToken cancellationToken = default)
         {
             return await RunAsync(null, cancellationToken);
         }
 
+        public async Task<TestStatus> VerifyAsync(CancellationToken cancellationToken = default)
+        {
+            var result = await RunAsync(null, cancellationToken);
+
+            if(result is null)
+            {
+                throw new VerificationCheckFailedException("RunAsync returned null result");
+            }
+            if (result.FailedChecks.Count > 0)
+            {
+                var failures = string.Join(",", result.FailedChecks.Select(x => x.Error));
+                throw new VerificationCheckFailedException($"{result.FailedChecks.Count} failed checks: {failures}");
+            }
+            return result;
+        }
         public async Task<TestStatus> RunAsync(Action<TestStatus>? testStatusCreatedCallback, CancellationToken cancellationToken = default)
         {
             var testReport = new TestReport(mTestPlan);
@@ -160,7 +168,17 @@ namespace DotHttpTest.Runner
             }
             else
             {
-                testStatus.ProgressPercent.SetValue(100);
+                // Loop counts?
+                var total = mTestPlan.ExpectedIterations;
+                if (total > 0)
+                {
+                    var progress = testStatus.Iterations.Value * 100.0 / total;
+                    testStatus.ProgressPercent.SetValue(progress);
+                }
+                else
+                {
+                    testStatus.ProgressPercent.SetValue(100);
+                }
             }
         }
     }

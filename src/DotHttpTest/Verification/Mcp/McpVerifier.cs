@@ -60,6 +60,19 @@ namespace DotHttpTest.Verification.Mcp
                 return true;
             }
             result.Error = $"MCP tool call failed. CallToolResult.IsError={response.CallToolResult?.IsError}";
+
+            if(response.CallToolResult?.Content is not null)
+            {
+                foreach(var content in response.CallToolResult.Content)
+                {
+                    if (content is TextContentBlock textContentBlock)
+                    {
+                        result.Error += $"\n{textContentBlock.Text}";
+                    }
+
+                }
+            }
+
             return false;
         }
 
