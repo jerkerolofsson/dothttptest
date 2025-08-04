@@ -54,6 +54,7 @@ namespace DotHttpTest.Builders
 
         public ClientOptionsBuilder UseMcpVerifiers()
         {
+            mVerifiers.Add(new McpVerifier());
             mVerifiers.Add(new McpToolVerifier());
             return this;
         }

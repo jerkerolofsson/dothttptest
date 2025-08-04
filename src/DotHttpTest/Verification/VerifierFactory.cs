@@ -14,6 +14,7 @@ namespace DotHttpTest.Verification
 
         public VerifierFactory(ClientOptions options)
         {
+            mVerifiers.Add(new Mcp.McpVerifier());
             mVerifiers.Add(new Mcp.McpToolVerifier());
             mVerifiers.Add(new Json.JsonVerifier());
             mVerifiers.Add(new Http.HttpVerifier());

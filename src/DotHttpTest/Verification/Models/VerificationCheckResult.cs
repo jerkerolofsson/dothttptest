@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DotHttpTest.Verification.Models
 {
-    public class VerificationCheckResult
+    public record class VerificationCheckResult
     {
         public DotHttpRequest Request { get; set; }
 

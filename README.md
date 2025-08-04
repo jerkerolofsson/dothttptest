@@ -10,11 +10,41 @@ With integration in VS Code, Visual Studio and Rider I like that I don't have to
 
 They are simple and efficient. Can be shared within the development team. They can be shared with a QA team.
 
-As a developer, I also don't like duplicating work. I was searching for a test framework where I can re-use my .http files for API testing, but I didn't find anything that allowed me to do it using C#.
+As a developer, I also don't like duplicating work. 
+I was searching for a test framework where I can re-use my .http files for API testing, but I didn't find anything that allowed me to do it using C#.
 
 ## MCP
 
 To test MCP, set the VERSION in the request header to MCP
+
+The syntax for MCP is using a syntax similar to HTTP, but internally the framework uses the ModelContextProtocol to 
+actually call tools.
+
+### MCP Transport Mode
+
+You can specify the transport mode by setting the `VERSION` header to `MCP/mode` in the request.
+
+Example:
+- MCP/SSE uses SSE (HttpTransportMode.Sse)
+- MCP/HTTP uses streamable HTTP (HttpTransportMode.StreamableHttp)
+- MCP/AUTO uses automatic (HttpTransportMode.AutoDetect)
+
+Default is automatic
+
+### Additional HTTP request headers
+
+If you want to add an additional HTTP header to the request, for example an Authorization header you can add it in the same syntax 
+as for HTTP requests
+
+```http
+CALL http://localhost:4723/mcp#browser_navigate MCP
+Authorization: Bearer TOKEN_GOES_HERE
+
+{
+	"url": "https://www.github.com"
+}
+
+```
 
 ### List tools
 
@@ -22,7 +52,8 @@ To test MCP, set the VERSION in the request header to MCP
 LIST  http://localhost/mcp MCP
 ```
 
-This will verify that tools can be listed
+This will list tool available from the MCP server (IMcpClient.ListToolsAsync).
+The response will be serialized as json and can be verified with the "json" verifier or the "tool" verifier.
 
 #### Verify that a tool exists
 
@@ -30,14 +61,33 @@ This will verify that tools can be listed
 # @verify tool browser_close exists
 LIST http://localhost/mcp MCP
 ```
-The "tool" verifier will evaluate the MCP ListToolsResult. This example will check if there is a tool with the name "browser_close" in the result.
+The "tool" verifier will evaluate the MCP ListToolsResult
+. This example will check if there is a tool with the name "browser_close" in the result.
 
-#### Verify that a tool parameter is declared
+#### Verify a tool parameter is defined in the inputSchema for a specific tool
 
 ```http
 # @verify tool browser_navigate.inputSchema.properties.url exists
+# @verify tool browser_navigate.inputSchema.properties.url.type == string
 LIST http://localhost/mcp MCP
 ```
+
+The "tool" verifier expects the tool name to be specified in the @verify command. It may be followed by:
+- inputSchema
+- outputSchema
+- annotations
+- meta
+- title
+- description
+
+title and description are strings, and can be evaluated directly as value types:
+```
+# @verify tool browser_navigate.title exists
+# @verify tool browser_navigate.description contains Navigates
+```
+
+inputSchema, outputSchema, annotations and meta are objects, and can be evaluated using [JSON path syntax](https://www.newtonsoft.com/json/help/html/QueryJsonSelectToken.htm)
+
 
 #### Using json verifier for MCP tool listing
 
@@ -63,6 +113,17 @@ CALL http://localhost/mcp#browser_navigate MCP
 }
 ```
 
+#### Verification of MCP tool invocation
+```http
+# @verify mcp success
+# @verify mcp textContent contains ### Ran Playwright code
+CALL http://localhost/mcp#browser_navigate MCP
+
+{
+	"url": "https://www.github.com"
+}
+```
+
 ## Extensions in .http file
 
 dothttptest supports extensions in the form of .http file comments, allowing the same file to be used within existing tools without breaking compliance, while also allowing automating tests with the same file.
@@ -80,7 +141,8 @@ A verification check can be added in a similar way to @name by using the @verify
 GET http://localhost/get HTTP/1.1
 ```
 
-The @verify command is followed by the module performing the verification. Additional modules can be added to support additional checks.
+The @verify command is followed by the module performing the verification. 
+Additional modules can be added to support additional checks.
 
 Verifiers can be created in code:
 ```csharp
@@ -123,7 +185,6 @@ PATCH http://localhost/post/{{$json.PropertyName}}
 	"UpdatedField": "123"
 }
 ```
-
 
 ## Usage
 

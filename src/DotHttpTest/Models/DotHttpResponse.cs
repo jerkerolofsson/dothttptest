@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using ModelContextProtocol.Protocol;
+using Newtonsoft.Json;
 using System.Collections.Concurrent;
 
 namespace DotHttpTest.Models
@@ -45,6 +46,7 @@ namespace DotHttpTest.Models
         /// The request URI
         /// </summary>
         public Uri? RequestUri { get; internal set; }
+        public CallToolResult? CallToolResult { get; internal set; }
 
         internal DotHttpResponse(HttpResponseMessage httpResponse, HttpRequestMetrics metrics)        
         {
